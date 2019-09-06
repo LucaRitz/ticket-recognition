@@ -1,0 +1,4 @@
+set(TICKET_RECOGNITION_TEST_SOURCES
+        ${TICKET_RECOGNITION_TEST_SOURCES}
+        sub/test.cpp
+        PARENT_SCOPE)
