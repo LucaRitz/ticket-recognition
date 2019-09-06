@@ -1,8 +1,10 @@
 #include <gtest/gtest.h>
+#include "some/someClass.hpp"
 
 TEST(first_test, testdescription) {
     // Act
+    int b = test(5);
 
     // Assert
-    ASSERT_EQ(7, 7);
+    ASSERT_EQ(1, b);
 }

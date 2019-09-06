@@ -17,3 +17,7 @@ void display(char* imageName) {
     imshow( "Display window", image ); // Show our image inside it.
     waitKey(0); // Wait for a keystroke in the window
 }
+
+int test(int a) {
+    return a - 4;
+}

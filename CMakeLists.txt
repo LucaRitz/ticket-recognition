@@ -8,6 +8,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
+include_directories(${ticket_recognition_SOURCE_DIR}/src)
+
 add_library(ticket_recognition_lib SHARED)
 add_executable(ticket_recognition)
 
