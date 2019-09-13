@@ -53,14 +53,14 @@ endif()
 add_library(png SHARED IMPORTED)
 
 set_target_properties(png PROPERTIES
-  INTERFACE_LINK_LIBRARIES "\$<\$<NOT:\$<CONFIG:DEBUG>>:D:/work/Install-OpenCV-with-Tesseract-Windows/install/zlib/lib/zlibstatic.lib>;\$<\$<CONFIG:DEBUG>:D:/work/Install-OpenCV-with-Tesseract-Windows/install/zlib/lib/zlibstaticd.lib>"
+  INTERFACE_LINK_LIBRARIES "\$<\$<NOT:\$<CONFIG:DEBUG>>:${CMAKE_SOURCE_DIR}/libs/zlib/lib/zlibstatic.lib>;\$<\$<CONFIG:DEBUG>:${CMAKE_SOURCE_DIR}/libs/zlib/lib/zlibstaticd.lib>"
 )
 
 # Create imported target png_static
 add_library(png_static STATIC IMPORTED)
 
 set_target_properties(png_static PROPERTIES
-  INTERFACE_LINK_LIBRARIES "\$<\$<NOT:\$<CONFIG:DEBUG>>:D:/work/Install-OpenCV-with-Tesseract-Windows/install/zlib/lib/zlibstatic.lib>;\$<\$<CONFIG:DEBUG>:D:/work/Install-OpenCV-with-Tesseract-Windows/install/zlib/lib/zlibstaticd.lib>"
+  INTERFACE_LINK_LIBRARIES "\$<\$<NOT:\$<CONFIG:DEBUG>>:${CMAKE_SOURCE_DIR}/libs/zlib/lib/zlibstatic.lib>;\$<\$<CONFIG:DEBUG>:${CMAKE_SOURCE_DIR}/libs/zlib/lib/zlibstaticd.lib>"
 )
 
 if(CMAKE_VERSION VERSION_LESS 2.8.12)

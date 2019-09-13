@@ -22,7 +22,7 @@ void display(char* imageName1) {
 
     // Destroy used object and release memory
     api->End();
-    delete [] outText;
+
     pixDestroy(&image);
 }
 
