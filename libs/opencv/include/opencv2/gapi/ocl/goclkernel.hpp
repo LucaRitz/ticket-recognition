@@ -2,7 +2,7 @@
 // It is subject to the license terms in the LICENSE file found in the top-level directory
 // of this distribution and at http://opencv.org/license.html.
 //
-// Copyright (C) 2018-2019 Intel Corporation
+// Copyright (C) 2018 Intel Corporation
 
 
 #ifndef OPENCV_GAPI_GOCLKERNEL_HPP
@@ -226,8 +226,7 @@ struct OCLCallHelper<Impl, std::tuple<Ins...>, std::tuple<Outs...> >
 } // namespace detail
 
 template<class Impl, class K>
-class GOCLKernelImpl: public cv::detail::OCLCallHelper<Impl, typename K::InArgs, typename K::OutArgs>,
-                      public cv::detail::KernelTag
+class GOCLKernelImpl: public detail::OCLCallHelper<Impl, typename K::InArgs, typename K::OutArgs>
 {
     using P = detail::OCLCallHelper<Impl, typename K::InArgs, typename K::OutArgs>;
 

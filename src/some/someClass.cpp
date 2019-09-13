@@ -1,21 +1,29 @@
-#include <opencv2/core.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
-#include <iostream>
-using namespace cv;
+#include <tesseract/baseapi.h>
+#include <leptonica/allheaders.h>
+
 using namespace std;
 
-void display(char* imageName) {
-    Mat image;
-    image = imread(imageName, IMREAD_COLOR); // Read the file
-    if( image.empty() ) // Check for invalid input
-    {
-        cout << "Could not open or find the image" << std::endl ;
-        return;
+void display(char* imageName1) {
+
+    char* outText;
+    tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
+    // Initialize tesseract-ocr with English, without specifying tessdata path
+    if (api->Init(NULL, "eng")) {
+        fprintf(stderr, "Could not initialize tesseract.\n");
+        exit(1);
     }
-    namedWindow( "Display window", WINDOW_AUTOSIZE ); // Create a window for display.
-    imshow( "Display window", image ); // Show our image inside it.
-    waitKey(0); // Wait for a keystroke in the window
+
+    // Open input image with leptonica library
+    Pix *image = pixRead(imageName1);
+    api->SetImage(image);
+    // Get OCR result
+    outText = api->GetUTF8Text();
+    printf("OCR output:\n%s", outText);
+
+    // Destroy used object and release memory
+    api->End();
+    delete [] outText;
+    pixDestroy(&image);
 }
 
 int test(int a) {

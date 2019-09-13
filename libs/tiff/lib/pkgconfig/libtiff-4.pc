@@ -1,0 +1,11 @@
+prefix=D:/work/Install-OpenCV-with-Tesseract-Windows/Install/tiff
+exec_prefix=D:/work/Install-OpenCV-with-Tesseract-Windows/Install/tiff
+libdir=D:/work/Install-OpenCV-with-Tesseract-Windows/Install/tiff/lib
+includedir=D:/work/Install-OpenCV-with-Tesseract-Windows/Install/tiff/include
+
+Name: libtiff
+Description:  Tag Image File Format (TIFF) library.
+Version: 4.0.9
+Libs: -LD:/work/Install-OpenCV-with-Tesseract-Windows/Install/tiff/lib -ltiff
+Libs.private: 
+Cflags: -ID:/work/Install-OpenCV-with-Tesseract-Windows/Install/tiff/include

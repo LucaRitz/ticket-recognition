@@ -2,7 +2,7 @@
 // It is subject to the license terms in the LICENSE file found in the top-level directory
 // of this distribution and at http://opencv.org/license.html.
 //
-// Copyright (C) 2018-2019 Intel Corporation
+// Copyright (C) 2018 Intel Corporation
 
 
 #ifndef OPENCV_GAPI_GCPUKERNEL_HPP
@@ -19,7 +19,6 @@
 #include <opencv2/gapi/garg.hpp>
 #include <opencv2/gapi/own/convert.hpp> //to_ocv
 #include <opencv2/gapi/util/compiler_hints.hpp> //suppress_unused_warning
-#include <opencv2/gapi/util/util.hpp>
 
 // FIXME: namespace scheme for backends?
 namespace cv {
@@ -44,12 +43,13 @@ namespace cpu
      * stack. Every backend is hardware-oriented and thus can run its
      * kernels efficiently on the target platform.
      *
-     * Backends are usually "black boxes" for G-API users -- on the API
+     * Backends are usually "back boxes" for G-API users -- on the API
      * side, all backends are represented as different objects of the
-     * same class cv::gapi::GBackend.
-     * User can manipulate with backends by specifying which kernels to use.
+     * same class cv::gapi::GBackend. User can manipulate with backends
+     * mainly by specifying which kernels to use or where to look up
+     * for kernels first.
      *
-     * @sa @ref gapi_hld
+     * @sa @ref gapi_hld, cv::gapi::lookup_order()
      */
 
     /**
@@ -124,10 +124,6 @@ template<> struct get_in<cv::GMat>
 {
     static cv::Mat    get(GCPUContext &ctx, int idx) { return to_ocv(ctx.inMat(idx)); }
 };
-template<> struct get_in<cv::GMatP>
-{
-    static cv::Mat    get(GCPUContext &ctx, int idx) { return get_in<cv::GMat>::get(ctx, idx); }
-};
 template<> struct get_in<cv::GScalar>
 {
     static cv::Scalar get(GCPUContext &ctx, int idx) { return to_ocv(ctx.inVal(idx)); }
@@ -192,13 +188,6 @@ template<> struct get_out<cv::GMat>
         return {r};
     }
 };
-template<> struct get_out<cv::GMatP>
-{
-    static tracked_cv_mat get(GCPUContext &ctx, int idx)
-    {
-        return get_out<cv::GMat>::get(ctx, idx);
-    }
-};
 template<> struct get_out<cv::GScalar>
 {
     static scalar_wrapper get(GCPUContext &ctx, int idx)
@@ -259,8 +248,7 @@ struct OCVCallHelper<Impl, std::tuple<Ins...>, std::tuple<Outs...> >
 } // namespace detail
 
 template<class Impl, class K>
-class GCPUKernelImpl: public cv::detail::OCVCallHelper<Impl, typename K::InArgs, typename K::OutArgs>,
-                      public cv::detail::KernelTag
+class GCPUKernelImpl: public detail::OCVCallHelper<Impl, typename K::InArgs, typename K::OutArgs>
 {
     using P = detail::OCVCallHelper<Impl, typename K::InArgs, typename K::OutArgs>;
 

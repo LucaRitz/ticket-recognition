@@ -8,3 +8,8 @@ TEST(first_test, testdescription) {
     // Assert
     ASSERT_EQ(1, b);
 }
+
+TEST(second, test) {
+    char* str = "resources\\test.jpg";
+    display(str);
+}

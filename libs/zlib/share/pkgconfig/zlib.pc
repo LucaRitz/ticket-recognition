@@ -1,0 +1,13 @@
+prefix=D:/work/Install-OpenCV-with-Tesseract-Windows/install/zlib
+exec_prefix=D:/work/Install-OpenCV-with-Tesseract-Windows/install/zlib
+libdir=D:/work/Install-OpenCV-with-Tesseract-Windows/install/zlib/lib
+sharedlibdir=D:/work/Install-OpenCV-with-Tesseract-Windows/install/zlib/lib
+includedir=D:/work/Install-OpenCV-with-Tesseract-Windows/install/zlib/include
+
+Name: zlib
+Description: zlib compression library
+Version: 1.2.11
+
+Requires:
+Libs: -L${libdir} -L${sharedlibdir} -lz
+Cflags: -I${includedir}

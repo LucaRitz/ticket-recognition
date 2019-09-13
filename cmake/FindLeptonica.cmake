@@ -1,0 +1,1 @@
+include("${Leptonica_DIR}/cmake/LeptonicaConfig.cmake")
