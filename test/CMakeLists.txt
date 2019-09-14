@@ -12,7 +12,6 @@ set(TICKET_RECOGNITION_TEST_SOURCES)
 add_subdirectory(sub)
 add_executable(ticket_recognition_test ${TICKET_RECOGNITION_TEST_SOURCES})
 
-message("${GTEST_BOTH_LIBRARIES}")
 target_link_libraries(ticket_recognition_test GTest::gtest GTest::gtest_main)
 target_link_libraries(ticket_recognition_test ticket_recognition_lib)
 
