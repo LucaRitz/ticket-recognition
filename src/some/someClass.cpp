@@ -18,7 +18,7 @@ void display(char *imageName1) {
     tesseract::TessBaseAPI *ocr = new tesseract::TessBaseAPI();
 
     // Initialize tesseract to use English (eng) and the LSTM OCR engine.
-    ocr->Init(NULL, "eng", tesseract::OEM_LSTM_ONLY);
+    ocr->Init(NULL, "deu", tesseract::OEM_LSTM_ONLY);
 
     // Set Page segmentation mode to PSM_AUTO (3)
     ocr->SetPageSegMode(tesseract::PSM_AUTO);

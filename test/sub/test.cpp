@@ -5,7 +5,7 @@ TEST(first_test, testdescription) {
     // Act
     using cti::Cti;
     Cti cti;
-    cti.hello("D:\\work\\ticket-recognition\\cmake-build-debug\\resources\\images\\test.png");
+    cti.hello("resources\\tickets\\berner-schlager-open-air-tickets-2019-v3.jpg");
     int b = 1;
 
     // Assert
