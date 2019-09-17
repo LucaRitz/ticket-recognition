@@ -1,4 +1,5 @@
 #include <string>
+#include <some/someClass.hpp>
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
 #include <opencv2/opencv.hpp>

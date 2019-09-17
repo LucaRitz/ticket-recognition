@@ -1,9 +1,12 @@
+#include <include/ticket.hpp>
 #include <gtest/gtest.h>
-#include "some/someClass.hpp"
 
 TEST(first_test, testdescription) {
     // Act
-    int b = test(5);
+    using cti::Cti;
+    Cti cti;
+    cti.hello("D:\\work\\ticket-recognition\\cmake-build-debug\\resources\\images\\test.png");
+    int b = 1;
 
     // Assert
     ASSERT_EQ(1, b);
@@ -11,5 +14,5 @@ TEST(first_test, testdescription) {
 
 TEST(second, test) {
     char* str = "resources\\test.jpg";
-    display(str);
+
 }

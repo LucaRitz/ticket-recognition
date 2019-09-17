@@ -1,5 +1,7 @@
-#include "../some/someClass.hpp"
+#include <include/ticket.hpp>
 #include <iostream>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 using std::cout;
 using std::endl;
@@ -11,6 +13,10 @@ int main( int argc, char** argv )
         cout <<" Usage: display_image ImageToLoadAndDisplay" << endl;
         return -1;
     }
-    display(argv[1]);
+
+    using cti::Cti;
+    Cti cti;
+    cti.hello(argv[1]);
+
     return 0;
 }

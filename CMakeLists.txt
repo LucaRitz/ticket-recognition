@@ -18,8 +18,9 @@ include_directories(${Tesseract_INCLUDE_DIRS})
 
 include_directories(${ticket_recognition_SOURCE_DIR}/src)
 
-add_library(ticket_recognition_lib STATIC)
-add_executable(ticket_recognition)
+add_library(ticket_recognition_lib SHARED)
+target_compile_definitions(ticket_recognition_lib PUBLIC MAKEDLL)
+add_executable(ticket_recognition src/include/ticket.cpp)
 
 add_subdirectory(src)
 add_subdirectory(test)
