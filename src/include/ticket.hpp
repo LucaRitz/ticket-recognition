@@ -24,6 +24,9 @@ namespace cti {
     class TicketMatch;
     class Metadata;
 
+    /**
+     * This class represents the library entrypoint.
+     */
     class EXPORT Cti {
     public:
         Cti(){}

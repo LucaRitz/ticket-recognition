@@ -4,6 +4,8 @@ project(ticket_recognition)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
+include(docs/doxygen.cmake)
+
 set(OpenCV_DIR "${ticket_recognition_SOURCE_DIR}/libs/opencv")
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
@@ -20,7 +22,7 @@ include_directories(${ticket_recognition_SOURCE_DIR}/src)
 
 add_library(ticket_recognition_lib SHARED)
 target_compile_definitions(ticket_recognition_lib PUBLIC MAKEDLL)
-add_executable(ticket_recognition src/include/ticket.cpp)
+add_executable(ticket_recognition)
 
 add_subdirectory(src)
 add_subdirectory(test)
