@@ -9,3 +9,4 @@ target_sources(ticket_recognition_lib PUBLIC
         ticket_image.hpp
         ticket_match.hpp)
 add_subdirectory(algorithm)
+add_subdirectory(sift)

@@ -1,4 +1,4 @@
-#include "sift_extraction_algorithm.hpp"
+#include <include/sift/sift_extraction_algorithm.hpp>
 #include <include/ticket.hpp>
 #include <include/ticket_image.hpp>
 #include <include/metadata.hpp>

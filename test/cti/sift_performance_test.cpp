@@ -6,8 +6,8 @@
 #include <include/ticket.hpp>
 #include <include/text.hpp>
 #include <include/metadata.hpp>
-#include <sift/sift_matching_algorithm.hpp>
-#include <sift/sift_extraction_algorithm.hpp>
+#include <include/sift/sift_matching_algorithm.hpp>
+#include <include/sift/sift_extraction_algorithm.hpp>
 
 using cti::Matcher;
 using cti::MetadataReader;
