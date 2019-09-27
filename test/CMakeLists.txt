@@ -1,16 +1,16 @@
 project(ticket_recognition_tests)
 
-
 # Setup testing
+set(CMAKE_CXX_STANDARD 17)
 enable_testing()
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 set(GTEST_ROOT "${ticket_recognition_SOURCE_DIR}/libs/googletest-distribution")
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIR})
+include_directories(${ticket_recognition_SOURCE_DIR}/src/cti)
 
-set(TICKET_RECOGNITION_TEST_SOURCES)
-add_subdirectory(sub)
-add_executable(ticket_recognition_test ${TICKET_RECOGNITION_TEST_SOURCES})
+add_executable(ticket_recognition_test)
+add_subdirectory(cti)
 
 target_link_libraries(ticket_recognition_test GTest::gtest GTest::gtest_main)
 target_link_libraries(ticket_recognition_test ticket_recognition_lib)
