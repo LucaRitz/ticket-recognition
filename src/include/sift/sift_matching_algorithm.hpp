@@ -1,10 +1,11 @@
 #pragma once
 
+#include <include/dllmacro.h>
 #include <include/algorithm/matching_algorithm.hpp>
 
 namespace cti {
 
-    class SiftMatchingAlgorithm : public MatchingAlgorithm {
+    class EXPORT SiftMatchingAlgorithm : public MatchingAlgorithm {
     public:
         void train(const Ticket&) override;
         void train(const vector<const Ticket*>&) override;
