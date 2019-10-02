@@ -1,1 +1,5 @@
-include("${Tesseract_DIR}/cmake/TesseractConfig.cmake")
+if (LINUX_BUILD)
+    include("${Tesseract_DIR}/linux/cmake/TesseractConfig.cmake")
+else(LINUX_BUID)
+    include("${Tesseract_DIR}/windows/cmake/TesseractConfig.cmake")
+endif (LINUX_BUILD)

@@ -1,1 +1,5 @@
-include("${Leptonica_DIR}/cmake/LeptonicaConfig.cmake")
+if (LINUX_BUILD)
+    include("${Leptonica_DIR}/linux/cmake/LeptonicaConfig.cmake")
+else(LINUX_BUID)
+    include("${Leptonica_DIR}/windows/cmake/LeptonicaConfig.cmake")
+endif (LINUX_BUILD)

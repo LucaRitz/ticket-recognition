@@ -1,0 +1,11 @@
+prefix=/var/teseract/Install/tiff
+exec_prefix=/var/teseract/Install/tiff
+libdir=/var/teseract/Install/tiff/lib
+includedir=/var/teseract/Install/tiff/include
+
+Name: libtiff
+Description:  Tag Image File Format (TIFF) library.
+Version: 4.0.9
+Libs: -L/var/teseract/Install/tiff/lib -ltiff
+Libs.private: 
+Cflags: -I/var/teseract/Install/tiff/include

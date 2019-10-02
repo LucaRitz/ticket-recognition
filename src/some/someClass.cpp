@@ -4,6 +4,7 @@
 #include <leptonica/allheaders.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
+#include <iostream>
 
 using namespace std;
 using namespace cv;
@@ -15,6 +16,7 @@ void display(char *imageName1) {
     string imageName2 = imageName1;
 
     // Create Tesseract object
+    cout << imageName1;
     tesseract::TessBaseAPI *ocr = new tesseract::TessBaseAPI();
 
     // Initialize tesseract to use English (eng) and the LSTM OCR engine.
