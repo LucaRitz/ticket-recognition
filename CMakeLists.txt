@@ -45,7 +45,13 @@ add_subdirectory(test)
 set(LIBRARY_BINARY_DIR ${PROJECT_BINARY_DIR}/libs)
 file(MAKE_DIRECTORY ${LIBRARY_BINARY_DIR})
 
-file(GLOB OPENCV_ALL_LIBS "${OpenCV_DIR}/${BUILD_ENV}/x64/vc15/bin/*.${LIB_TYPE}*")
+if (LINUX_BUILD)
+    set(OPENCV_LIB_ENV "${BUILD_ENV}/lib")
+else(LINUX_BUID)
+    set(OPENCV_LIB_ENV "${BUILD_ENV}/x64/vc15/bin")
+endif (LINUX_BUILD)
+
+file(GLOB OPENCV_ALL_LIBS "${OpenCV_DIR}/${OPENCV_LIB_ENV}/*.${LIB_TYPE}*")
 file(COPY ${OPENCV_ALL_LIBS} DESTINATION ${LIBRARY_BINARY_DIR})
 
 file(GLOB LPNG_ALL_LIBS "${ticket_recognition_SOURCE_DIR}/libs/lpng/${BUILD_ENV}/bin/*.${LIB_TYPE}*")

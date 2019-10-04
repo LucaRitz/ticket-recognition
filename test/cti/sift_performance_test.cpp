@@ -35,7 +35,7 @@ TEST(siftMatching, tenTemplatesOneShouldMatch) {
     // Act
     std::cout << "Act" << std::endl;
     const std::optional<const TicketMatch> matchedOpt = matcher.match(image);
-    const cti::Metadata* const metadata = reader.read(Ticket("", image, vector<const Text*>()), image);
+    const cti::Metadata* const metadata = reader.read(Ticket("", image, *(new vector<const Text*>)), image);
 
     // Assert
     ASSERT_TRUE(matchedOpt);

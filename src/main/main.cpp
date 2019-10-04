@@ -5,6 +5,7 @@
 #include <include/ticket_image.hpp>
 #include <include/ticket.hpp>
 #include <include/text.hpp>
+#include <include/bounding_box.hpp>
 #include <include/metadata.hpp>
 #include <include/sift/sift_matching_algorithm.hpp>
 #include <include/sift/sift_extraction_algorithm.hpp>
@@ -20,6 +21,7 @@ using cti::Text;
 using cti::Metadata;
 using cti::SiftMatchingAlgorithm;
 using cti::SiftExtractionAlgorithm;
+using cti::BoundingBox;
 
 int main( int argc, char** argv )
 {
@@ -44,7 +46,7 @@ int main( int argc, char** argv )
     // Act
     std::cout << "Act" << std::endl;
     const std::optional<const TicketMatch> matchedOpt = matcher.match(image);
-    const cti::Metadata* const metadata = reader.read(Ticket("", image, vector<const Text*>()), image);
+    const cti::Metadata* const metadata = reader.read(Ticket("", image, *(new vector<const Text*>())), image);
 
     return 0;
 }

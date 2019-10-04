@@ -1,5 +1,5 @@
 if (LINUX_BUILD)
-    include("${OpenCV_DIR}/linux/lib/cmake/OpenCVConfig.cmake")
+    include("${OpenCV_DIR}/linux/lib/cmake/opencv4/OpenCVConfig.cmake")
 else(LINUX_BUID)
     include("${OpenCV_DIR}/windows/OpenCVWindows.cmake")
     ###########################################################

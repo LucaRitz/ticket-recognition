@@ -15,7 +15,7 @@ namespace cti {
     class Ticket {
     public:
         Ticket(string name, TicketImage& image, vector<const Text*>& texts)
-                : Ticket(std::move(name), image, texts, vector<const BoundingBox*>()) {}
+                : Ticket(std::move(name), image, texts, *(new vector<const BoundingBox*>())) {}
         Ticket(string name, TicketImage& image, vector<const Text*>& texts, vector<const BoundingBox*>& matchingAreas)
                 : _name(std::move(name)), _image(image), _texts(texts), _matchingAreas(matchingAreas) {}
 

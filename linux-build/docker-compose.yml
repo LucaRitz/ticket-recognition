@@ -1,0 +1,7 @@
+version: '3'
+services:
+  build:
+    command: tail -f /dev/null
+    build: .
+    volumes:
+      - ../../ticket-recognition:/usr/local/bin/sources

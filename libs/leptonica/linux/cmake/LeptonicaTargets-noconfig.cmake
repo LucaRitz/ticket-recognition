@@ -8,7 +8,7 @@ set(CMAKE_IMPORT_FILE_VERSION 1)
 # Import target "leptonica" for configuration ""
 set_property(TARGET leptonica APPEND PROPERTY IMPORTED_CONFIGURATIONS NOCONFIG)
 set_target_properties(leptonica PROPERTIES
-  IMPORTED_LINK_INTERFACE_LIBRARIES_NOCONFIG "m"
+  IMPORTED_LINK_INTERFACE_LIBRARIES_NOCONFIG "${CMAKE_SOURCE_DIR}/libs/lpng/linux/lib/libpng.so;${CMAKE_SOURCE_DIR}/libs/tiff/linux/lib/libtiff.so;${CMAKE_SOURCE_DIR}/libs/zlib/linux/lib/libz.so"
   IMPORTED_LOCATION_NOCONFIG "${_IMPORT_PREFIX}/lib/libleptonica.so.1.74.4"
   IMPORTED_SONAME_NOCONFIG "libleptonica.so.5.1.0"
   )
