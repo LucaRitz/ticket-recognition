@@ -19,14 +19,10 @@ RUN sh /cmake-3.14.1-Linux-x86_64.sh --prefix=/opt/cmake --skip-license
 RUN ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake
 RUN cmake --version
 
-# SET COMPOSE_CONVERT_WINDOWS_PATHS=1
+ADD install.sh /usr/local/bin/install.sh
+RUN chmod 777 /usr/local/bin/install.sh
+ADD build_config.sh /usr/local/bin/build_config.sh
+RUN chmod 777 /usr/local/bin/build_config.sh
+RUN ln -s /usr/local/bin/build_config.sh / # backwards compat
 
-RUN mkdir /usr/local/bin/build
-RUN chmod 777 /usr/local/bin/build
-ADD install.sh /usr/local/bin/build/install.sh
-RUN chmod 777 /usr/local/bin/build/install.sh
-
-RUN echo "PATH=$PATH:/usr/local/bin/build/libs" > /etc/environment
-ENV TESSDATA_PREFIX=/usr/local/bin/build/resources/tessdata/
-
-CMD ["\bin\bash"]
+ENTRYPOINT ["build_config.sh"]

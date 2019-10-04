@@ -1,8 +1,7 @@
 # SET COMPOSE_CONVERT_WINDOWS_PATHS=1
 version: '3'
 services:
-  build:
+  test:
     build: .
     volumes:
-      - ../../ticket-recognition:/usr/local/bin/sources
       - ../cmake-build-debug-linux:/usr/local/bin/build
