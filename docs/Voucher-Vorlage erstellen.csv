@@ -1,0 +1,12 @@
+ID,Name,Formenbibliothek,Seiten-ID,Eingeschränkt durch,Gruppe,Linienursprung,Linienziel,Ursprung Pfeil,Ziel Pfeil,Textbereich 1,Textbereich 2,Textbereich 3
+1,Seite,,,,,,,,,Seite 1,,
+2,Schwimmbahn,Flussdiagr. Formen,1,,,,,,,BENUTZER,aNWENDUNG,CTI-BIBLIOTHEK
+3,Terminator,Flussdiagr. Formen,1,2:1,,,,,,Voucher-Vorlage erstellen,,
+4,Prozess,Flussdiagr. Formen,1,2:2,,,,,,Voucher-Vorlage speichern,,
+5,Prozess,Flussdiagr. Formen,1,2:3,,,,,,Voucher-Vorlage für Erkennung aufbereiten und speichern,,
+6,Text,Standard,1,,,,,,,Voucher-Vorlage erstellen,,
+7,Prozess,Flussdiagr. Formen,1,2:2,,,,,,Voucher-Vorlage an CTI weitergeben,,
+8,Linie,,1,,,3,4,None,Arrow,,,
+9,Linie,,1,,,7,5,None,Arrow,,,
+10,Linie,,1,,,,,None,None,,,
+11,Linie,,1,,,4,7,None,Arrow,,,
