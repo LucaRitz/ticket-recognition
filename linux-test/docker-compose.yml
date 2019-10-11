@@ -2,6 +2,6 @@
 version: '3'
 services:
   test:
-    build: .
+    image: linux/ticket_test
     volumes:
       - ../cmake-build-debug-linux:/usr/local/bin/build

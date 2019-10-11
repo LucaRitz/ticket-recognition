@@ -14,9 +14,9 @@ namespace cti {
 
     class Ticket {
     public:
-        Ticket(string name, TicketImage& image, vector<const Text*>& texts)
+        Ticket(string name, const TicketImage& image, vector<const Text*>& texts)
                 : Ticket(std::move(name), image, texts, *(new vector<const BoundingBox*>())) {}
-        Ticket(string name, TicketImage& image, vector<const Text*>& texts, vector<const BoundingBox*>& matchingAreas)
+        Ticket(string name, const TicketImage& image, vector<const Text*>& texts, vector<const BoundingBox*>& matchingAreas)
                 : _name(std::move(name)), _image(image), _texts(texts), _matchingAreas(matchingAreas) {}
 
         Ticket(const Ticket& other) = delete;
@@ -28,15 +28,15 @@ namespace cti {
             return _name;
         }
 
-        const TicketImage& image() {
+        const TicketImage& image() const {
             return _image;
         }
 
-        const vector<const Text*>& texts() {
+        const vector<const Text*>& texts() const {
             return _texts;
         }
 
-        const vector<const BoundingBox*>& matchingAreas() {
+        const vector<const BoundingBox*>& matchingAreas() const {
             return _matchingAreas;
         }
 
