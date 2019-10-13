@@ -4,10 +4,15 @@
 #include <include/ticket_match.hpp>
 #include <include/ticket_image.hpp>
 #include <include/ticket.hpp>
+#include <include/bounding_box.hpp>
+#include <include/point.hpp>
 #include <include/text.hpp>
 #include <include/metadata.hpp>
 #include <include/sift/sift_matching_algorithm.hpp>
 #include <include/sift/sift_extraction_algorithm.hpp>
+#include <reader/reader.hpp>
+#include <iostream>
+#include <opencv2/opencv.hpp>
 
 using cti::Matcher;
 using cti::MetadataReader;
@@ -18,8 +23,22 @@ using cti::Text;
 using cti::Metadata;
 using cti::SiftMatchingAlgorithm;
 using cti::SiftExtractionAlgorithm;
+using cti::reader::getTemplateOf;
 
 TEST(siftMatching, tenTemplatesOneShouldMatch) {
+    Ticket* ticket = getTemplateOf("resources/reader/test_input1.txt");
+    std::cout << "Template Id: " << ticket->name() << std::endl;
+    printf("Template image: ");
+    std::cout << std::endl;
+    std::cout << "Texts:" << std::endl;
+    for (const Text* text : ticket->texts()) {
+        std::cout << "Text-Key: " << text->key() << std::endl;
+        std::cout << "Point Top-Left -> x: " << text->boundingBox().topLeft().x() << " ";
+        std::cout << "y: " << text->boundingBox().topLeft().y() << std::endl;
+        std::cout << "Point Bottom-Right -> x: " << text->boundingBox().bottomRight().x() << " ";
+        std::cout << "y: " << text->boundingBox().bottomRight().y() << std::endl;
+    }
+
     std::cout << "Create Matching Algo" << std::endl;
     SiftMatchingAlgorithm matchingAlgorithm;
     std::cout << "Create Reading Algo" << std::endl;
@@ -30,12 +49,10 @@ TEST(siftMatching, tenTemplatesOneShouldMatch) {
     std::cout << "Create Reader" << std::endl;
     MetadataReader reader(extractionAlgorithm);
 
-    TicketImage image("test_image.png");
-
     // Act
     std::cout << "Act" << std::endl;
-    const std::optional<const TicketMatch> matchedOpt = matcher.match(image);
-    const cti::Metadata* const metadata = reader.read(Ticket("", image, *(new vector<const Text*>)), image);
+    const std::optional<const TicketMatch> matchedOpt = matcher.match(ticket->image());
+    const cti::Metadata* const metadata = reader.read(Ticket("", ticket->image(), *(new vector<const Text*>)), *(new cti::TicketImage("resources\\images\\test.png")));
 
     // Assert
     ASSERT_TRUE(matchedOpt);
