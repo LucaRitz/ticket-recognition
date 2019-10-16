@@ -4,6 +4,7 @@ project(ticket_recognition_tests)
 set(CMAKE_CXX_STANDARD 17)
 enable_testing()
 
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 add_subdirectory(lib/googletest-release-1.8.1)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
