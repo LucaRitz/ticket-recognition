@@ -15,6 +15,7 @@
 #include <sstream>
 #include <algorithm>
 #include <experimental/filesystem>
+#include <regex>
 
 using cti::Text;
 namespace fs = std::experimental::filesystem;
@@ -25,6 +26,31 @@ const char kPathSeparator =
 #else
         '/';
 #endif
+
+template<char delimiter>
+class Delimiter : public std::string {
+public:
+    friend std::istream& operator>>(std::istream& is, Delimiter& output) {
+        std::getline(is, output, delimiter);
+        return is;
+    }
+};
+
+namespace cti::reader {
+    std::string replaceDirectorySeparator(std::string_view);
+}
+
+std::string cti::reader::replaceDirectorySeparator(std::string_view value) {
+    std::string normalizedPath(value);
+    if ('\\' == kPathSeparator) {
+        std::replace(normalizedPath.begin(), normalizedPath.end(), '/', kPathSeparator);
+    }
+    return normalizedPath;
+}
+
+///////////////////////////////////////////////////////////////////////
+// Templates
+///////////////////////////////////////////////////////////////////////
 
 struct TemplatePoint {
     int _x;
@@ -56,17 +82,21 @@ struct Template {
     }
 };
 
-typedef void (*FunctionPointer)(Template &, const std::string&);
-typedef std::unordered_map<std::string_view, FunctionPointer> PointerMapping;
+typedef void (*TemplateFunctionPointer)(Template &, const std::string&);
+typedef std::unordered_map<std::string_view, TemplateFunctionPointer> TemplatePointerMapping;
 
-template<char delimiter>
-class Delimiter : public std::string {
-public:
-    friend std::istream& operator>>(std::istream& is, Delimiter& output) {
-        std::getline(is, output, delimiter);
-        return is;
+namespace cti::reader {
+    cti::Ticket* getTemplateOf(std::string_view);
+}
+
+std::vector<cti::Ticket*> cti::reader::getAllTemplatesOf(std::string_view directoryPath) {
+    std::vector<cti::Ticket*> tickets;
+    std::string normalizedPath = replaceDirectorySeparator(directoryPath);
+    for (const auto& entry : fs::directory_iterator(normalizedPath)) {
+        tickets.push_back(getTemplateOf(entry.path().u8string()));
     }
-};
+    return tickets;
+}
 
 std::vector<std::string> splitBySemicolon(const std::string& value) {
     std::istringstream iss(value);
@@ -102,27 +132,10 @@ void addText(Template& templateRef, const std::string& value) {
     templateRef._texts = texts;
 }
 
-std::string replaceDirectorySeparator(std::string_view value) {
-    std::string normalizedPath(value);
-    if ('\\' == kPathSeparator) {
-        std::replace(normalizedPath.begin(), normalizedPath.end(), '/', kPathSeparator);
-    }
-    return normalizedPath;
-}
-
-std::vector<cti::Ticket*> cti::reader::getAllTemplatesOf(std::string_view directoryPath) {
-    std::vector<cti::Ticket*> tickets;
-    std::string normalizedPath = replaceDirectorySeparator(directoryPath);
-    for (const auto& entry : fs::directory_iterator(normalizedPath)) {
-        tickets.push_back(getTemplateOf(entry.path().u8string()));
-    }
-    return tickets;
-}
-
 cti::Ticket* cti::reader::getTemplateOf(std::string_view path) {
     std::string normalizedPath = replaceDirectorySeparator(path);
     Template templateValues;
-    PointerMapping mapping;
+    TemplatePointerMapping mapping;
     mapping[std::string_view("template_id")] = [](Template &templateRef,
                                                   const std::string& value) { templateRef._template_id = value; };
     mapping[std::string_view("image")] = [](Template &templateRef,
@@ -152,6 +165,75 @@ cti::Ticket* cti::reader::getTemplateOf(std::string_view path) {
     return new cti::Ticket(templateValues._template_id, *(new cti::TicketImage(templateValues._imagePath)), *texts);
 }
 
-cti::reader::TestCase *cti::reader::getTestOf(std::string_view path) {
-    return nullptr;
+///////////////////////////////////////////////////////////////////////
+// Test Cases
+///////////////////////////////////////////////////////////////////////
+
+struct Case {
+    std::string _expectedTemplateId;
+    std::unordered_map< std::string, std::string > _expectedTexts;
+    std::string _image;
+};
+
+typedef void (*TestCaseFunctionPointer)(Case&, const std::string&);
+typedef std::unordered_map<std::string_view, TestCaseFunctionPointer> TestCasePointerMapping;
+
+namespace cti::reader {
+    cti::reader::TestCase* getTestOf(std::string_view);
+}
+
+std::vector<cti::reader::TestCase*> cti::reader::getAllTestsOf(std::string_view directoryPath) {
+    std::vector<cti::reader::TestCase*> testCases;
+    std::string normalizedPath = replaceDirectorySeparator(directoryPath);
+    for (const auto& entry : fs::directory_iterator(normalizedPath)) {
+        testCases.push_back(getTestOf(entry.path().u8string()));
+    }
+    return testCases;
+}
+
+void addExpectedText(Case& caseRef, const std::string& value) {
+    std::vector<std::string> results = splitBySemicolon(value);
+    std::unordered_map< std::string, std::string > expectedTexts;
+
+    std::string previous_key;
+    int isKey {0};
+    std::for_each(results.begin(), results.end(), [&results, &expectedTexts, &previous_key, &isKey](std::string split){
+        if (isKey % 2 == 0) {
+            previous_key.assign(split);
+        } else {
+            const std::regex re("(.*)(__)(.*)");
+            std::string replaced = split;
+            while (std::regex_search(replaced, re)) {
+                replaced = std::regex_replace(replaced, re, "$1 $3");
+            }
+            expectedTexts[previous_key] = replaced;
+        }
+        isKey++;
+    });
+
+    caseRef._expectedTexts = expectedTexts;
+}
+
+cti::reader::TestCase* cti::reader::getTestOf(std::string_view path) {
+    std::string normalizedPath = replaceDirectorySeparator(path);
+    Case caseValues;
+    TestCasePointerMapping mapping;
+    mapping[std::string_view("expected_template_id")] = [](Case& caseValuesRef,
+                                                  const std::string& value) { caseValuesRef._expectedTemplateId = value; };
+    mapping[std::string_view("image")] = [](Case& caseValuesRef,
+                                            const std::string& value) { caseValuesRef._image = replaceDirectorySeparator(value); };
+    mapping[std::string_view("expected_text")] = &addExpectedText;
+
+    std::fstream file(path.data());
+
+    std::string key;
+    std::string value;
+
+    while (file >> key >> value) {
+        if (mapping.find(key) != mapping.end()) {
+            mapping[key](caseValues, value);
+        }
+    }
+
+    return new cti::reader::TestCase(caseValues._expectedTemplateId, caseValues._expectedTexts, caseValues._image);
 }
