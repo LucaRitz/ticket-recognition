@@ -1,6 +1,9 @@
 #pragma once
 
 #include <string_view>
+#include <vector>
+
+using std::vector;
 
 namespace cti {
     class Ticket;
@@ -9,6 +12,7 @@ namespace cti {
 namespace cti::reader {
     class TestCase;
 
-    Ticket* getTemplateOf(std::string_view path);
-    TestCase* getTestOf(std::string_view path);
+    vector<Ticket*> getAllTemplatesOf(std::string_view);
+    Ticket* getTemplateOf(std::string_view);
+    TestCase* getTestOf(std::string_view);
 }

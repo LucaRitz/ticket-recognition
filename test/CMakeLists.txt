@@ -15,6 +15,9 @@ add_executable(ticket_recognition_test)
 add_subdirectory(cti)
 add_subdirectory(reader)
 
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    target_link_libraries(ticket_recognition_test stdc++fs)
+endif()
 target_link_libraries(ticket_recognition_test gtest gtest_main)
 target_link_libraries(ticket_recognition_test ticket_recognition_lib)
 
