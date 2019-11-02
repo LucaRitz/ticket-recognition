@@ -7,5 +7,6 @@ target_sources(ticket_recognition_lib PUBLIC
         text.cpp
         metadata.cpp
         ticket_match.cpp
+        ticket.cpp
         )
 add_subdirectory(sift)
