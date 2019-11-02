@@ -4,6 +4,8 @@
 #include <include/ticket_match.hpp>
 #include <include/ticket_image.hpp>
 
+cti::Matcher::Matcher(cti::MatchingAlgorithm &algorithm) : _algorithm(algorithm) {}
+
 void cti::Matcher::train(const cti::Ticket& ticketTemplate) {
     _algorithm.train(ticketTemplate);
 }

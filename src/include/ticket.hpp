@@ -12,7 +12,7 @@ namespace cti {
     class TicketImage;
     class BoundingBox;
 
-    class Ticket {
+    class EXPORT Ticket {
     public:
         Ticket(string name, const TicketImage& image, vector<const Text*>& texts)
                 : Ticket(std::move(name), image, texts, *(new vector<const BoundingBox*>())) {}

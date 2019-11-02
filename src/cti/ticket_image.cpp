@@ -15,3 +15,30 @@ cti::TicketImage::TicketImage(const string& imagePath) : _width(0), _height(0), 
     this->_image = new unsigned char[dataSize];
     memcpy(this->_image, image.data, dataSize);
 }
+
+cti::TicketImage::TicketImage(const int width, const int height, const int bytes_per_pixel, const int bytes_per_line,
+                              unsigned char *image)
+        : _width(width), _height(height), _bytes_per_pixel(bytes_per_pixel), _bytes_per_line(bytes_per_line),
+          _image(image) {
+
+}
+
+const int cti::TicketImage::width() const {
+    return _width;
+}
+
+const int cti::TicketImage::height() const {
+    return _height;
+}
+
+const int cti::TicketImage::bytesPerPixel() const {
+    return _bytes_per_pixel;
+}
+
+const int cti::TicketImage::bytesPerLine() const {
+    return _bytes_per_line;
+}
+
+unsigned char* cti::TicketImage::image() const {
+    return _image;
+}
