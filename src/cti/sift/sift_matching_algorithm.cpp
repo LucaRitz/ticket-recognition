@@ -5,11 +5,15 @@
 #include "../../some/someClass.hpp"
 
 void cti::SiftMatchingAlgorithm::train(const cti::Ticket& ticketTemplate) {
-    // TODO: implement
+    this->_trained.clear();
+    this->_trained.push_back(&ticketTemplate);
 }
 
 void cti::SiftMatchingAlgorithm::train(const vector<const cti::Ticket*>& ticketTemplates) {
-    // TODO: implement
+    this->_trained.clear();
+    for (auto* ticketTemplate : ticketTemplates) {
+        this->_trained.push_back(ticketTemplate);
+    }
 }
 
 vector<cti::TicketMatch> cti::SiftMatchingAlgorithm::execute(const cti::TicketImage& ticket) const {
@@ -18,7 +22,7 @@ vector<cti::TicketMatch> cti::SiftMatchingAlgorithm::execute(const cti::TicketIm
 }
 
 const optional<cti::TicketMatch> cti::SiftMatchingAlgorithm::select(vector<cti::TicketMatch>& matches) const {
-    return std::make_optional(cti::TicketMatch("this_template_matched"));
+    return std::make_optional(cti::TicketMatch(*this->_trained.at(0)));
     //return std::nullopt;
 }
 

@@ -3,8 +3,9 @@
 #include <include/ticket_image.hpp>
 #include <include/metadata.hpp>
 
-void cti::SiftExtractionAlgorithm::normalize(const cti::Ticket& ticketTemplate, cti::TicketImage& ticketImage) const {
+cti::TicketImage* cti::SiftExtractionAlgorithm::normalize(const cti::Ticket& ticketTemplate, cti::TicketImage& ticketImage) const {
     // TODO: Implement
+    return nullptr;
 }
 
 cti::Metadata *

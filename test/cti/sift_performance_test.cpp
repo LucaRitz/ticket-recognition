@@ -64,6 +64,9 @@ TEST(siftMatching, tenTemplatesOneShouldMatch) {
     std::cout << "Create Reader" << std::endl;
     MetadataReader reader(extractionAlgorithm);
 
+    Ticket ticket("this_template_matched", tickets.at(0)->image(), *(new vector<const Text*>));
+    matcher.train(ticket);
+
     // Act
     std::cout << "Act" << std::endl;
     const std::optional<const TicketMatch> matchedOpt = matcher.match(tickets.at(0)->image());
@@ -71,6 +74,6 @@ TEST(siftMatching, tenTemplatesOneShouldMatch) {
 
     // Assert
     ASSERT_TRUE(matchedOpt);
-    ASSERT_EQ("this_template_matched", matchedOpt.value().name());
+    ASSERT_EQ("this_template_matched", matchedOpt.value().ticket().name());
     ASSERT_EQ("100", metadata->texts().at("TourCode"));
 }

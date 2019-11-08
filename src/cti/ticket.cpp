@@ -14,7 +14,7 @@ cti::Ticket::Ticket(string name, const cti::TicketImage &image, vector<const cti
 
 }
 
-const string cti::Ticket::name() {
+const string cti::Ticket::name() const {
     return _name;
 }
 
