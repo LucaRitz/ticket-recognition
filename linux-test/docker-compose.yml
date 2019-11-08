@@ -1,7 +1,9 @@
 # SET COMPOSE_CONVERT_WINDOWS_PATHS=1
 version: '3'
 services:
-  test:
-    image: linux/ticket_test
+  linux_test:
+    build:
+      context: './'
     volumes:
       - ../cmake-build-debug-linux:/usr/local/bin/build
+    container_name: linux_test

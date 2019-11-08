@@ -8,7 +8,7 @@ using std::string;
 namespace cti {
     class EXPORT TicketImage {
     public:
-        TicketImage(const string&);
+        explicit TicketImage(const string&);
         TicketImage(const int, const int, const int, const int, unsigned char*);
         TicketImage(const TicketImage&) = delete;
         TicketImage(TicketImage&&) = delete;

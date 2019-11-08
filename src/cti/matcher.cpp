@@ -16,6 +16,5 @@ void cti::Matcher::train(const vector<const cti::Ticket*>& ticketTemplates) {
 
 const std::optional<const cti::TicketMatch> cti::Matcher::match(const cti::TicketImage& ticket) const {
     vector<TicketMatch> matches = _algorithm.execute(ticket);
-    const TicketMatch match = _algorithm.select(matches);
-    return std::make_optional(match);
+    return _algorithm.select(matches);
 }

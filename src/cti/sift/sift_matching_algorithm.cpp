@@ -14,11 +14,11 @@ void cti::SiftMatchingAlgorithm::train(const vector<const cti::Ticket*>& ticketT
 
 vector<cti::TicketMatch> cti::SiftMatchingAlgorithm::execute(const cti::TicketImage& ticket) const {
     char* str = "resources/images/test.png";
-    display(str);
     return vector<cti::TicketMatch>();
 }
 
-const cti::TicketMatch cti::SiftMatchingAlgorithm::select(vector<cti::TicketMatch>& matches) const {
-    return cti::TicketMatch("this_template_matched");
+const optional<cti::TicketMatch> cti::SiftMatchingAlgorithm::select(vector<cti::TicketMatch>& matches) const {
+    return std::make_optional(cti::TicketMatch("this_template_matched"));
+    //return std::nullopt;
 }
 
