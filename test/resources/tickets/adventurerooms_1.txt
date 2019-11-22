@@ -1,0 +1,8 @@
+expected_template_id adventurerooms
+image resources/images/input/adventurerooms_1.png
+image resources/images/input/adventurerooms_1_regular.jpg
+image resources/images/input/adventurerooms_1_tilted.jpg
+image resources/images/input/adventurerooms_1_covered.jpg
+expected_text for;Max__Muster
+expected_text value;75
+expected_text date;28.10.2019

@@ -1,3 +1,0 @@
-expected_template_id T2
-image relative/path/to/input/image2
-expected_text tourcode;Expected__Text__Another__Text;key2;ExpectedKey2

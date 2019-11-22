@@ -1,0 +1,7 @@
+expected_template_id babymarkt
+image resources/images/input/babymarkt_2_rotated.jpg
+image resources/images/input/babymarkt_2_distance.jpg
+expected_text for;Bertha
+expected_text from;Bruno
+expected_text value;30__CHF
+expected_text code;ES-234B543

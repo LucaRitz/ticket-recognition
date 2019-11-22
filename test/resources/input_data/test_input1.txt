@@ -1,3 +1,0 @@
-template_id T1
-image resources/images/test.png
-text tourcode;100,0;200,50

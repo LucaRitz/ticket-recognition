@@ -1,0 +1,5 @@
+expected_template_id k
+image resources/images/input/k_1_rotated.jpg
+image resources/images/input/k_1_distance.jpg
+expected_text for;Kleider
+expected_text value;75__CHF

@@ -1,0 +1,5 @@
+template_id adventurerooms
+image resources/images/adventurerooms.png
+text for;85,130;385,185
+text value;265,195;385,235
+text date;130,240;390,280

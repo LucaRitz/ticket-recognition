@@ -1,0 +1,8 @@
+expected_template_id kneippgarten
+image resources/images/input/kneippgarten_2.png
+image resources/images/input/kneippgarten_2_regular.jpg
+image resources/images/input/kneippgarten_2_tilted.jpg
+image resources/images/input/kneippgarten_2_covered.jpg
+expected_text value;35__CHF
+expected_text location;Bern
+expected_text date;04.04.2022

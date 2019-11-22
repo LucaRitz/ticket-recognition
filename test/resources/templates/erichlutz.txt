@@ -1,0 +1,5 @@
+template_id erichlutz
+image resources/images/erichlutz.jpg
+text from;265,175;435,205
+text for;265,105;435,135
+text value;265,140;535,170

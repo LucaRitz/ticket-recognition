@@ -1,0 +1,5 @@
+template_id geschenkgutschein
+image resources/images/geschenkgutschein.jpg
+text date;182,365;435,418
+text value;282,188;659,251
+text for;372,261;753,334

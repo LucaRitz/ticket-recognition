@@ -1,0 +1,7 @@
+expected_template_id yoga
+image resources/images/input/yoga_1_rotated.jpg
+image resources/images/input/yoga_1_distance.jpg
+expected_text for;Hubert
+expected_text from;Barbara
+expected_text value;100__CHF
+expected_text validthrough;26.11.2020

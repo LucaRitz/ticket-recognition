@@ -1,0 +1,4 @@
+template_id generic
+image resources/images/generic.jpg
+text value;280,290;540,355
+text code;50,315;225,355

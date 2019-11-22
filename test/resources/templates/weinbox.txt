@@ -1,0 +1,3 @@
+template_id weinbox
+image resources/images/weinbox.jpg
+text code;533,277;717,309

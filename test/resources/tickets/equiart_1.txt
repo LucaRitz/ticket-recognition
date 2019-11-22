@@ -1,0 +1,7 @@
+expected_template_id equiart
+image resources/images/input/equiart_1_rotated.jpg
+image resources/images/input/equiart_1_distance.jpg
+expected_text value;50__CHF
+expected_text for;Terry__Pratchet
+expected_text code;110
+expected_text date;23.12.19

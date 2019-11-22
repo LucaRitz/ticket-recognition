@@ -1,0 +1,5 @@
+expected_template_id weihnachten
+image resources/images/input/weihnachten_2_rotated.jpg
+image resources/images/input/weihnachten_2_distance.jpg
+expected_text value;50__CHF
+expected_text code;WEIH-12423

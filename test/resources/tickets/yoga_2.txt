@@ -1,0 +1,9 @@
+expected_template_id yoga
+image resources/images/input/yoga_2.jpg
+image resources/images/input/yoga_2_regular.jpg
+image resources/images/input/yoga_2_tilted.jpg
+image resources/images/input/yoga_2_covered.jpg
+expected_text for;Helga
+expected_text from;Werner
+expected_text value;30__CHF
+expected_text validthrough;15.12.2019

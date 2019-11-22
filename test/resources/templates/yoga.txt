@@ -1,0 +1,6 @@
+template_id yoga
+image resources/images/yoga.jpg
+text for;116,178;637,259
+text from;121,260;637,310
+text value;149,311;637,361
+text validthrough;180,365;635,411

@@ -1,0 +1,4 @@
+template_id pfefferhaus
+image resources/images/pfefferhaus.jpg
+text value;235,99;372,134
+text code;287,135;372,160

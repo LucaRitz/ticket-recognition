@@ -1,0 +1,4 @@
+template_id weihnachten
+image resources/images/weihnachten.jpg
+text value;276,290;542,352
+text code;46,315;225,355

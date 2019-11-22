@@ -1,0 +1,5 @@
+template_id kneippgarten
+image resources/images/kneippgarten.png
+text value;111,125;714,159
+text location;106,204;397,235
+text date;106,241;398,272

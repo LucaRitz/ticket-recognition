@@ -1,0 +1,5 @@
+expected_template_id generic
+image resources/images/input/generic_2_rotated.jpg
+image resources/images/input/generic_2_distance.jpg
+expected_text code;HTB-97342
+expected_text value;80__CHF

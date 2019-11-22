@@ -1,0 +1,6 @@
+template_id equiart
+image resources/images/equiart.jpg
+text code;123,348;187,392
+text date;254,349;367,392
+text value;196,142;573,195
+text for;81,231;572,284

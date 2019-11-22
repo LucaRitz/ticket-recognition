@@ -1,0 +1,9 @@
+expected_template_id equiart
+image resources/images/input/equiart_2.jpg
+image resources/images/input/equiart_2_regular.jpg
+image resources/images/input/equiart_2_tilted.jpg
+image resources/images/input/equiart_2_covered.jpg
+expected_text for;Luca
+expected_text value;200__CHF
+expected_text code;AX3
+expected_text date;09.07.20

@@ -1,0 +1,5 @@
+template_id walliserstuba
+image resources/images/walliserstuba.jpg
+text value;59,383;611,434
+text code;631,384;815,433
+text date;59,473;427,523

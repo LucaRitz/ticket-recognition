@@ -1,0 +1,8 @@
+expected_template_id erichlutz
+image resources/images/input/erichlutz_2.jpg
+image resources/images/input/erichlutz_2_regular.jpg
+image resources/images/input/erichlutz_2_tilted.jpg
+image resources/images/input/erichlutz_2_covered.jpg
+expected_text for;Stefan
+expected_text value;Velo
+expected_text from;Boris

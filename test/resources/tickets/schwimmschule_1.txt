@@ -1,0 +1,10 @@
+expected_template_id schwimmschule
+image resources/images/input/schwimmschule_1.jpg
+image resources/images/input/schwimmschule_1_regular.jpg
+image resources/images/input/schwimmschule_1_tilted.jpg
+image resources/images/input/schwimmschule_1_covered.jpg
+expected_text value;50
+expected_text code;SUMMER2019
+expected_text from;Marc
+expected_text for;Lisa
+expected_text date;03.05.19

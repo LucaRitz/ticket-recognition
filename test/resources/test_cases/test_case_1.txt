@@ -1,3 +1,0 @@
-expected_template_id T1
-image relative/path/to/input/image
-expected_text tourcode;Expected Text

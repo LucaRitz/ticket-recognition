@@ -1,0 +1,6 @@
+expected_template_id massage
+image resources/images/input/massage_1_rotated.jpg
+image resources/images/input/massage_1_distance.jpg
+expected_text duration;45__min
+expected_text for;Hans
+expected_text date;30.04.2019

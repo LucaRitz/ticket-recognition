@@ -1,0 +1,7 @@
+expected_template_id pfefferhaus
+image resources/images/input/pfefferhaus_2.jpg
+image resources/images/input/pfefferhaus_2_regular.jpg
+image resources/images/input/pfefferhaus_2_tilted.jpg
+image resources/images/input/pfefferhaus_2_covered.jpg
+expected_text value;60__CHF
+expected_text code;ZTR543

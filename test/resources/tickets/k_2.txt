@@ -1,0 +1,7 @@
+expected_template_id k
+image resources/images/input/k_2.jpg
+image resources/images/input/k_2_regular.jpg
+image resources/images/input/k_2_tilted.jpg
+image resources/images/input/k_2_covered.jpg
+expected_text for;Papi
+expected_text value;25__CHF

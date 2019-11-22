@@ -1,0 +1,5 @@
+expected_template_id boulderisland
+image resources/images/input/boulderisland_2_rotated.jpg
+image resources/images/input/boulderisland_2_distance.jpg
+expected_text for;Christian
+expected_text value;Billiard

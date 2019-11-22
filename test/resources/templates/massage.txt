@@ -1,0 +1,5 @@
+template_id massage
+image resources/images/massage.jpg
+text date;244,330;602,379
+text for;244,184;603,234
+text duration;244,257;602,307

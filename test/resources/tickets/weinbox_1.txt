@@ -1,0 +1,4 @@
+expected_template_id weinbox
+image resources/images/input/weinbox_1_rotated.jpg
+image resources/images/input/weinbox_1_distance.jpg
+expected_text code;ABC321

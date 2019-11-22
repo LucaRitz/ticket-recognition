@@ -1,0 +1,9 @@
+expected_template_id babymarkt
+image resources/images/input/babymarkt_1.jpg
+image resources/images/input/babymarkt_1_regular.jpg
+image resources/images/input/babymarkt_1_tilted.jpg
+image resources/images/input/babymarkt_1_covered.jpg
+expected_text from;Ursula__Berger
+expected_text for;Hans__Zimmer
+expected_text value;100__CHF
+expected_text code;BM-3476

@@ -1,0 +1,6 @@
+expected_template_id weinbox
+image resources/images/input/weinbox_2.jpg
+image resources/images/input/weinbox_2_regular.jpg
+image resources/images/input/weinbox_2_tilted.jpg
+image resources/images/input/weinbox_2_covered.jpg
+expected_text code;WEIN-3A6H

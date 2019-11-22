@@ -1,0 +1,6 @@
+expected_template_id erichlutz
+image resources/images/input/erichlutz_1_rotated.jpg
+image resources/images/input/erichlutz_1_distance.jpg
+expected_text value;Kinobesuch
+expected_text for;Fabian__Gerber
+expected_text from;Mami

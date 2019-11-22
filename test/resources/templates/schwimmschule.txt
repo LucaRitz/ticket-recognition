@@ -1,0 +1,7 @@
+template_id schwimmschule
+image resources/images/schwimmschule.jpg
+text value;308,114;401,145
+text code;309,164;561,193
+text from;309,214;561,242
+text for;310,261;561,290
+text date;470,116;562,144

@@ -1,0 +1,5 @@
+expected_template_id rrrevolve
+image resources/images/input/rrrevolve_1_rotated.jpg
+image resources/images/input/rrrevolve_1_distance.jpg
+expected_text value;200
+expected_text code;5XR87DS

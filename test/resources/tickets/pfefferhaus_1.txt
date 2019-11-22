@@ -1,0 +1,5 @@
+expected_template_id pfefferhaus
+image resources/images/input/pfefferhaus_1_rotated.jpg
+image resources/images/input/pfefferhaus_1_distance.jpg
+expected_text value;150__CHF
+expected_text code;A534

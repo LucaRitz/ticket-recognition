@@ -1,0 +1,7 @@
+expected_template_id adventurerooms
+image resources/images/input/adventurerooms_2.png
+image resources/images/input/adventurerooms_2_rotated.jpg
+image resources/images/input/adventurerooms_2_distance.jpg
+expected_text for;Urs
+expected_text value;40__CHF
+expected_text date;16.02.2021

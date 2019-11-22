@@ -1,0 +1,6 @@
+expected_template_id geschenkgutschein
+image resources/images/input/geschenkgutschein_2_rotated.jpg
+image resources/images/input/geschenkgutschein_2_distance.jpg
+expected_text for;Fridolin
+expected_text value;50__CHF
+expected_text date;12.05.2021

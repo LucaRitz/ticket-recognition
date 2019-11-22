@@ -1,0 +1,4 @@
+template_id k
+image resources/images/k.jpg
+text value;354,189;525,219
+text for;345,154;526,185

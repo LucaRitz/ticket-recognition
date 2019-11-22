@@ -1,0 +1,4 @@
+template_id boulderisland
+image resources/images/boulderisland.jpg
+text value;299,216;719,261
+text for;287,171;719,216

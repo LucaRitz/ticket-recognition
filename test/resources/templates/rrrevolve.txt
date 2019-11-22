@@ -1,0 +1,4 @@
+template_id rrrevolve
+image resources/images/rrrevolve.jpg
+text value;40,108;231,148
+text code;37,168;233,196

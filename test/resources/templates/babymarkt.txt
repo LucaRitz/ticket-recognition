@@ -1,0 +1,6 @@
+template_id babymarkt
+image resources/images/babymarkt.jpg
+text value;195,231;425,291
+text code;220,310;540,370
+text for;100,145;370,200
+text from;420,140;710,200

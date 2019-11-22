@@ -1,0 +1,8 @@
+expected_template_id schwimmschule
+image resources/images/input/schwimmschule_2_rotated.jpg
+image resources/images/input/schwimmschule_2_distance.jpg
+expected_text value;40
+expected_text date;24.10.19
+expected_text code;GSZ591HF
+expected_text from;Miriam
+expected_text for;Yannis

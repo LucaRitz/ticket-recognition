@@ -1,0 +1,7 @@
+expected_template_id generic
+image resources/images/input/generic_1.jpg
+image resources/images/input/generic_1_regular.jpg
+image resources/images/input/generic_1_tilted.jpg
+image resources/images/input/generic_1_covered.jpg
+expected_text value;100__CHF
+expected_text code;A5G654

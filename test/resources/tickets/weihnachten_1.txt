@@ -1,0 +1,7 @@
+expected_template_id weihnachten
+image resources/images/input/weihnachten_1.jpg
+image resources/images/input/weihnachten_1_regular.jpg
+image resources/images/input/weihnachten_1_tilted.jpg
+image resources/images/input/weihnachten_1_covered.jpg
+expected_text code;W-234
+expected_text value;100__CHF

@@ -1,0 +1,7 @@
+expected_template_id boulderisland
+image resources/images/input/boulderisland_1.jpg
+image resources/images/input/boulderisland_1_regular.jpg
+image resources/images/input/boulderisland_1_tilted.jpg
+image resources/images/input/boulderisland_1_covered.jpg
+expected_text value;Abenteuerbergtour
+expected_text for;Gudrun__Müller
