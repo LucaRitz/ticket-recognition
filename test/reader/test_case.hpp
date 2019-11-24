@@ -5,13 +5,14 @@
 
 using std::string;
 using std::unordered_map;
+using std::vector;
 
 namespace cti::reader {
     class TestCase {
     public:
-        TestCase(string expectedTemplateId, unordered_map<string, string> expectedTexts, string image)
+        TestCase(string expectedTemplateId, unordered_map<string, string> expectedTexts, vector<string> images)
                 : _expectedTemplateId(std::move(expectedTemplateId)), _expectedTexts(expectedTexts),
-                  _image(std::move(image)){};
+                  _images(std::move(images)){};
         TestCase(const TestCase&) = default;
         TestCase(TestCase&&) = default;
         TestCase &operator=(const TestCase&) = default;
@@ -25,13 +26,13 @@ namespace cti::reader {
             return _expectedTexts;
         }
 
-        string getImage() const {
-            return _image;
+        const vector<string>& getImages() const {
+            return _images;
         }
 
     private:
         const string _expectedTemplateId;
         const unordered_map< string, string > _expectedTexts;
-        const string _image;
+        const vector<string> _images;
     };
 }

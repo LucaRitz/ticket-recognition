@@ -12,6 +12,6 @@ namespace cti {
 namespace cti::reader {
     class TestCase;
 
-    vector<Ticket*> getAllTemplatesOf(std::string_view);
+    vector<const Ticket*> getAllTemplatesOf(std::string_view);
     vector<TestCase*> getAllTestsOf(std::string_view);
 }
