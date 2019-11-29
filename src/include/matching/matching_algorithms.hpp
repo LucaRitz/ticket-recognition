@@ -4,7 +4,7 @@
 #include <include/matching/matching_algorithm.hpp>
 #include <memory>
 
-using std::shared_ptr;
+using std::unique_ptr;
 
 namespace cti {
 
@@ -13,7 +13,7 @@ namespace cti {
     class EXPORT MatchingAlgorithms {
     public:
         MatchingAlgorithms();
-        static shared_ptr<MatchingAlgorithm> orb(); // TODO: tweak parameter
-        static shared_ptr<MatchingAlgorithm> sift(); // TODO: tweak parameter
+        static unique_ptr<MatchingAlgorithm> orb(); // TODO: tweak parameter
+        static unique_ptr<MatchingAlgorithm> sift(); // TODO: tweak parameter
     };
 }

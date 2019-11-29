@@ -3,12 +3,12 @@
 #include "tesseract_ocr_algorithm.hpp"
 
 using std::string;
-using std::shared_ptr;
+using std::unique_ptr;
 
 cti::OcrAlgorithms::OcrAlgorithms() = default;
 
-shared_ptr<cti::OcrAlgorithm> cti::OcrAlgorithms::tesseract(const string& language) {
-    return std::make_shared<cti::impl::TesseractOcrAlgorithm>(
+unique_ptr<cti::OcrAlgorithm> cti::OcrAlgorithms::tesseract(const string& language) {
+    return std::make_unique<cti::impl::TesseractOcrAlgorithm>(
             language
     );
 }

@@ -4,7 +4,7 @@
 #include <include/extraction/extraction_algorithm.hpp>
 #include <memory>
 
-using std::shared_ptr;
+using std::unique_ptr;
 
 namespace cti {
 
@@ -13,7 +13,7 @@ namespace cti {
     class EXPORT ExtractionAlgorithms {
     public:
         ExtractionAlgorithms();
-        static shared_ptr<ExtractionAlgorithm> orb(); // TODO: tweak parameter
-        static shared_ptr<ExtractionAlgorithm> sift(); // TODO: tweak parameter
+        static unique_ptr<ExtractionAlgorithm> orb(); // TODO: tweak parameter
+        static unique_ptr<ExtractionAlgorithm> sift(); // TODO: tweak parameter
     };
 }

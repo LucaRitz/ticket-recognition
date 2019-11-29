@@ -6,8 +6,8 @@
 
 cti::MatchingAlgorithms::MatchingAlgorithms() = default;
 
-std::shared_ptr<cti::MatchingAlgorithm> cti::MatchingAlgorithms::orb() {
-    return std::make_shared<cti::impl::MatchingAlgorithmImpl>(
+std::unique_ptr<cti::MatchingAlgorithm> cti::MatchingAlgorithms::orb() {
+    return std::make_unique<cti::impl::MatchingAlgorithmImpl>(
             0.7,
             0.5,
             200.0,
@@ -17,8 +17,8 @@ std::shared_ptr<cti::MatchingAlgorithm> cti::MatchingAlgorithms::orb() {
     );
 }
 
-std::shared_ptr<cti::MatchingAlgorithm> cti::MatchingAlgorithms::sift() {
-    return std::make_shared<cti::impl::MatchingAlgorithmImpl>(
+std::unique_ptr<cti::MatchingAlgorithm> cti::MatchingAlgorithms::sift() {
+    return std::make_unique<cti::impl::MatchingAlgorithmImpl>(
             0.7,
             0.5,
             1000.0,

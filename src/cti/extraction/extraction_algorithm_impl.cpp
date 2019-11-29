@@ -16,7 +16,7 @@ cti::impl::ExtractionAlgorithmImpl::ExtractionAlgorithmImpl(
         double ratioTestThreshold,
         cv::Ptr<cv::Feature2D> feature2d,
         cv::Ptr<cv::DescriptorMatcher> matcher,
-        std::shared_ptr<cti::OcrAlgorithm> ocr) :
+        std::unique_ptr<cti::OcrAlgorithm> ocr) :
         ratioTestThreshold(ratioTestThreshold),
         feature2d(std::move(feature2d)),
         matcher(std::move(matcher)),

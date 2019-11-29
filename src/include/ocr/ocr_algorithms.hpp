@@ -5,7 +5,7 @@
 #include <string>
 #include <memory>
 
-using std::shared_ptr;
+using std::unique_ptr;
 using std::string;
 
 namespace cti {
@@ -15,6 +15,6 @@ namespace cti {
     class EXPORT OcrAlgorithms {
     public:
         OcrAlgorithms();
-        static shared_ptr<OcrAlgorithm> tesseract(const string& language); // TODO: tweak parameter
+        static unique_ptr<OcrAlgorithm> tesseract(const string& language); // TODO: tweak parameter
     };
 }
