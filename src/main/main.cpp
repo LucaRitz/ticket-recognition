@@ -7,8 +7,6 @@
 #include <include/text.hpp>
 #include <include/bounding_box.hpp>
 #include <include/metadata.hpp>
-#include <include/sift/sift_matching_algorithm.hpp>
-#include <include/sift/sift_extraction_algorithm.hpp>
 
 using std::cout;
 using std::endl;
@@ -19,34 +17,9 @@ using cti::TicketMatch;
 using cti::Ticket;
 using cti::Text;
 using cti::Metadata;
-using cti::SiftMatchingAlgorithm;
-using cti::SiftExtractionAlgorithm;
 using cti::BoundingBox;
 
-int main( int argc, char** argv )
-{
-    if( argc != 2)
-    {
-        cout <<" Usage: display_image ImageToLoadAndDisplay" << endl;
-        return -1;
-    }
-
-    std::cout << "Create Matching Algo" << std::endl;
-    SiftMatchingAlgorithm matchingAlgorithm;
-    std::cout << "Create Reading Algo" << std::endl;
-    SiftExtractionAlgorithm extractionAlgorithm;
-
-    std::cout << "Create Matcher" << std::endl;
-    Matcher matcher(matchingAlgorithm);
-    std::cout << "Create Reader" << std::endl;
-    MetadataReader reader(extractionAlgorithm);
-
-    TicketImage image("test_image.png");
-
-    // Act
-    std::cout << "Act" << std::endl;
-    const std::optional<const TicketMatch> matchedOpt = matcher.match(image);
-    const cti::Metadata* const metadata = reader.read(Ticket("", image, *(new vector<const Text*>())), image);
-
+int main(int argc, char** argv) {
+    // TODO: implement or remove
     return 0;
 }

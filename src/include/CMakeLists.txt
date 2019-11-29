@@ -8,5 +8,6 @@ target_sources(ticket_recognition_lib PUBLIC
         ticket.hpp
         ticket_image.hpp
         ticket_match.hpp)
-add_subdirectory(algorithm)
-add_subdirectory(sift)
+add_subdirectory(matching)
+add_subdirectory(extraction)
+add_subdirectory(ocr)

@@ -8,12 +8,16 @@
 #include <include/point.hpp>
 #include <include/text.hpp>
 #include <include/metadata.hpp>
-#include <include/sift/sift_matching_algorithm.hpp>
-#include <include/sift/sift_extraction_algorithm.hpp>
+#include <include/matching/matching_algorithm.hpp>
+#include <include/matching/matching_algorithms.hpp>
+#include <include/extraction/extraction_algorithm.hpp>
+#include <include/extraction/extraction_algorithms.hpp>
 #include <reader/reader.hpp>
 #include <reader/test_case.hpp>
+#include <reader/confusion_matrix.hpp>
 #include <iostream>
 #include <opencv2/opencv.hpp>
+#include "../cti/timer/timer.hpp"
 
 using cti::Matcher;
 using cti::MetadataReader;
@@ -22,58 +26,276 @@ using cti::TicketMatch;
 using cti::Ticket;
 using cti::Text;
 using cti::Metadata;
-using cti::SiftMatchingAlgorithm;
-using cti::SiftExtractionAlgorithm;
+using cti::MatchingAlgorithm;
+using cti::MatchingAlgorithms;
+using cti::ExtractionAlgorithm;
+using cti::ExtractionAlgorithms;
 using cti::reader::getAllTemplatesOf;
 using cti::reader::getAllTestsOf;
 using cti::reader::TestCase;
 
-TEST(siftMatching, tenTemplatesOneShouldMatch) {
-    std::vector<Ticket*> tickets = getAllTemplatesOf("resources/input_data");
-    for(auto* ticket : tickets) {
-        std::cout << "Template Id: " << ticket->name() << std::endl;
-        std::cout << "Template image: " << std::endl;
-        std::cout << "Texts:" << std::endl;
-        for (const Text* text : ticket->texts()) {
-            std::cout << "Text-Key: " << text->key() << std::endl;
-            std::cout << "Point Top-Left -> x: " << text->boundingBox().topLeft().x() << " ";
-            std::cout << "y: " << text->boundingBox().topLeft().y() << std::endl;
-            std::cout << "Point Bottom-Right -> x: " << text->boundingBox().bottomRight().x() << " ";
-            std::cout << "y: " << text->boundingBox().bottomRight().y() << std::endl;
+double calcExtractionScore(TestCase* testcase, const cti::Metadata* const metadata);
+cti::reader::ConfusionMatrix calcMatchingScore(std::vector<const Ticket *>& tickets, TestCase* testcase, const std::optional<const TicketMatch>& matchedOpt);
+double runExtraction(std::vector<const Ticket *>& tickets, std::vector<TestCase*>& testcases, MetadataReader& reader);
+double runMatching(std::vector<const Ticket *>& tickets, std::vector<TestCase*>& testcases, Matcher& matcher);
+std::vector<std::vector<const Ticket*>> getBatchesOfTwoThirds(std::vector<const Ticket*>& tickets);
+
+TEST(siftMatching, performance) {
+
+    std::ofstream out("sift_matching.log");
+    std::streambuf *coutbuf = std::cout.rdbuf();
+    std::cout.rdbuf(out.rdbuf());
+
+    std::vector<const Ticket*> tickets = getAllTemplatesOf("resources/templates");
+    std::vector<TestCase*> testcases = getAllTestsOf("resources/tickets");
+
+    double totalScore = 0.0;
+    int numberOfBatches = 0;
+    for(auto& batch : getBatchesOfTwoThirds(tickets)) {
+        std::shared_ptr<MatchingAlgorithm> matchingAlgorithm = MatchingAlgorithms::sift();
+        Matcher matcher(*matchingAlgorithm);
+        totalScore += runMatching(batch, testcases, matcher);
+        numberOfBatches++;
+    }
+    std::cout << "TOTAL SCORE: " << (totalScore / numberOfBatches) << std::endl;
+
+    std::cout.rdbuf(coutbuf);
+}
+
+TEST(orbMatching, performance) {
+
+    std::ofstream out("orb_matching.log");
+    std::streambuf *coutbuf = std::cout.rdbuf();
+    std::cout.rdbuf(out.rdbuf());
+
+    std::vector<const Ticket*> tickets = getAllTemplatesOf("resources/templates");
+    std::vector<TestCase*> testcases = getAllTestsOf("resources/tickets");
+
+    double totalScore = 0.0;
+    int numberOfBatches = 0;
+    for(auto& batch : getBatchesOfTwoThirds(tickets)) {
+        std::shared_ptr<MatchingAlgorithm> matchingAlgorithm = MatchingAlgorithms::orb();
+        Matcher matcher(*matchingAlgorithm);
+        totalScore += runMatching(batch, testcases, matcher);
+        numberOfBatches++;
+    }
+    std::cout << "TOTAL SCORE: " << (totalScore / numberOfBatches) << std::endl;
+
+    std::cout.rdbuf(coutbuf);
+}
+
+TEST(siftExtraction, performance) {
+
+    std::ofstream out("sift_extraction.log");
+    std::streambuf *coutbuf = std::cout.rdbuf();
+    std::cout.rdbuf(out.rdbuf());
+
+    std::vector<const Ticket*> tickets = getAllTemplatesOf("resources/templates");
+    std::vector<TestCase*> testcases = getAllTestsOf("resources/tickets");
+
+    std::shared_ptr<ExtractionAlgorithm> extractionAlgorithm = ExtractionAlgorithms::sift();
+    MetadataReader reader(*extractionAlgorithm);
+
+    runExtraction(tickets, testcases, reader);
+
+    std::cout.rdbuf(coutbuf);
+}
+
+TEST(orbExtraction, performance) {
+
+    std::ofstream out("orb_extraction.log");
+    std::streambuf *coutbuf = std::cout.rdbuf();
+    std::cout.rdbuf(out.rdbuf());
+
+    std::vector<const Ticket *> tickets = getAllTemplatesOf("resources/templates");
+    std::vector<TestCase*> testcases = getAllTestsOf("resources/tickets");
+
+    std::shared_ptr<ExtractionAlgorithm> extractionAlgorithm = ExtractionAlgorithms::orb();
+    MetadataReader reader(*extractionAlgorithm);
+
+    runExtraction(tickets, testcases, reader);
+
+    std::cout.rdbuf(coutbuf);
+}
+
+const cti::Ticket* findTicket(std::vector<const Ticket*>& tickets, const std::string& name) {
+    for (auto* ticket : tickets) {
+        if (ticket->name() == name) {
+            return ticket;
+        }
+    }
+    return nullptr;
+}
+
+double runMatching(std::vector<const Ticket *>& tickets, std::vector<TestCase*>& testcases, Matcher& matcher) {
+
+    int trainingTime = cti::Timer::timed([&matcher, &tickets] () {
+        matcher.train(tickets);
+    });
+
+    cti::reader::ConfusionMatrix totalMatchingScore { 0, 0, 0, 0 };
+
+    int totalMatchingTime = 0;
+    int totalTestcases = 0;
+
+    for(auto& testcase : testcases) {
+        for (auto& imagePath : testcase->getImages()) {
+            totalTestcases++;
+
+            std::cout << "RUN TESTCASE " << imagePath << std::endl;
+            TicketImage inputImage { imagePath };
+
+            bool correctMatch = false;
+            string matchName = "";
+            string expectedName = "";
+            int matchingTime = cti::Timer::timed([&matcher, &correctMatch, &matchName, &expectedName, &tickets, &inputImage, &testcase, &totalMatchingScore] () {
+
+                const std::optional<const TicketMatch> matchedOpt = matcher.match(inputImage);
+                cti::reader::ConfusionMatrix matchingScore = calcMatchingScore(tickets, testcase, matchedOpt);
+                totalMatchingScore = totalMatchingScore + matchingScore;
+
+                bool shouldMatch = findTicket(tickets, testcase->getExpectedTemplateId()) != nullptr;
+                bool matchedAnything = matchedOpt.has_value();
+                bool matchedCorrectly = matchedAnything && matchedOpt.value().ticket().name() == testcase->getExpectedTemplateId();
+                correctMatch = (!shouldMatch && !matchedAnything) || (shouldMatch && matchedCorrectly);
+                matchName = (matchedOpt.has_value() ? matchedOpt.value().ticket().name() : "NONE");
+                expectedName = shouldMatch ? testcase->getExpectedTemplateId() : "NONE";
+            });
+
+            std::cout << (correctMatch ? "correct" : "incorrect")
+                        << " match: " << matchName
+                        << " expected: " << expectedName
+                        << " took " << matchingTime << "ms" << std::endl;
+            totalMatchingTime += matchingTime;
         }
     }
 
-    std::vector<TestCase*> testCases = getAllTestsOf("resources/test_cases");
-    for(auto* testCase : testCases) {
-        std::cout << "Expected Template Id: " << testCase->getExpectedTemplateId() << std::endl;
-        std::cout << "Image: " << testCase->getImage() << std::endl;
-        std::cout << "Texts:" << std::endl;
-        for (std::pair< std::string, std::string > element : testCase->getExpectedTexts()) {
-            std::cout << "Text-Key: " << element.first << std::endl;
-            std::cout << "Expected value: " << element.second << std::endl;
+    std::cout << "ACCURACY: " << totalMatchingScore.accuracy()
+              << " TP=" << totalMatchingScore.truePositives()
+              << " TN="<< totalMatchingScore.trueNegatives()
+              << " FP=" << totalMatchingScore.falsePositives()
+              << " FN=" << totalMatchingScore.falseNegatives()
+              << " Training took " << trainingTime << " ms for " << tickets.size() << " Tickets"
+              << " = " << (double)trainingTime / tickets.size() << " ms/Ticket"
+              << " Matching took " << totalMatchingTime << " ms for " << totalTestcases << " Testcases"
+              << " = " << (double)totalMatchingTime / totalTestcases << "ms/Testcase"
+              << std::endl;
+
+    return totalMatchingScore.accuracy();
+}
+
+double runExtraction(std::vector<const Ticket *>& tickets, std::vector<TestCase*>& testcases, MetadataReader& reader) {
+
+    double totalScore = 0.0;
+    int totalCases = 0;
+
+    int time = cti::Timer::timed([&tickets, &testcases, &reader, &totalScore, &totalCases] () {
+
+        for(auto& testcase : testcases) {
+            for (auto& imagePath : testcase->getImages()) {
+                totalCases++;
+                std::cout << "RUN TESTCASE " << imagePath << std::endl;
+
+                const Ticket* matchedTicket = findTicket(tickets, testcase->getExpectedTemplateId());
+                if(matchedTicket == nullptr) {
+                    std::cout << "ERROR: Unable to find template" << std::endl;
+                    continue;
+                }
+
+                TicketImage inputImage { imagePath };
+                const cti::Metadata* const metadata = reader.read(*matchedTicket, inputImage);
+                totalScore += calcExtractionScore(testcase, metadata);
+            }
+        }
+    });
+    std::cout << "SCORE: " << totalScore / totalCases << " testcases=" << totalCases
+                << " time=" << time << "ms"  << " = " << ((double)time / testcases.size()) << "ms/testcase"<< std::endl;
+    return totalScore / totalCases;
+}
+
+cti::reader::ConfusionMatrix calcMatchingScore(std::vector<const Ticket *>& tickets, TestCase* testcase, const std::optional<const TicketMatch>& matchedOpt) {
+
+    int truePositives = 0;
+    int trueNegatives = 0;
+    int falsePositives = 0;
+    int falseNegatives = 0;
+
+    bool shouldMatch = findTicket(tickets, testcase->getExpectedTemplateId()) != nullptr;
+    bool matchedAnything = matchedOpt.has_value();
+    bool correctMatch = matchedAnything && matchedOpt.value().ticket().name() == testcase->getExpectedTemplateId();
+
+    if(shouldMatch) {
+        if(correctMatch) {
+            truePositives++;
+        } else {
+            falseNegatives++;
+        }
+    } else {
+        if(matchedAnything) {
+            falsePositives++;
+        } else {
+            trueNegatives++;
         }
     }
 
-    std::cout << "Create Matching Algo" << std::endl;
-    SiftMatchingAlgorithm matchingAlgorithm;
-    std::cout << "Create Reading Algo" << std::endl;
-    SiftExtractionAlgorithm extractionAlgorithm;
+    cti::reader::ConfusionMatrix result { truePositives, trueNegatives, falsePositives, falseNegatives };
+    return result;
+}
 
-    std::cout << "Create Matcher" << std::endl;
-    Matcher matcher(matchingAlgorithm);
-    std::cout << "Create Reader" << std::endl;
-    MetadataReader reader(extractionAlgorithm);
+double calcExtractionScore(TestCase* testcase, const cti::Metadata* const metadata) {
 
-    Ticket ticket("this_template_matched", tickets.at(0)->image(), *(new vector<const Text*>));
-    matcher.train(ticket);
+    int correct = 0;
+    int incorrect = 0;
 
-    // Act
-    std::cout << "Act" << std::endl;
-    const std::optional<const TicketMatch> matchedOpt = matcher.match(tickets.at(0)->image());
-    const cti::Metadata* const metadata = reader.read(Ticket("", tickets.at(0)->image(), *(new vector<const Text*>)), *(new cti::TicketImage("resources/images/test.png")));
+    unordered_map<string, string> actualTexts = metadata->texts();
 
-    // Assert
-    ASSERT_TRUE(matchedOpt);
-    ASSERT_EQ("this_template_matched", matchedOpt.value().ticket().name());
-    ASSERT_EQ("100", metadata->texts().at("TourCode"));
+    for (auto &expectedText : testcase->getExpectedTexts()) {
+
+        unordered_map<string, string>::const_iterator actualTextIt = actualTexts.find(expectedText.first);
+        if(actualTextIt == actualTexts.end()) {
+            std::cout << "Missing text: key=" << expectedText.first
+                      << " expected_text='" << expectedText.second << "'"
+                      << std::endl;
+            incorrect++;
+        } else {
+            string actualText = actualTextIt->second;
+
+            if(actualText == expectedText.second) {
+                correct++;
+            } else {
+                std::cout << "Incorrect text: key=" << expectedText.first
+                        << " expected_text='" << expectedText.second << "'"
+                        << " actual_text='" << actualText << "'"
+                        << std::endl;
+                incorrect++;
+            }
+        }
+    }
+    return (double) correct / (correct + incorrect);
+}
+
+std::vector<std::vector<const Ticket*>> getBatchesOfTwoThirds(std::vector<const Ticket*>& tickets) {
+
+    std::vector<std::vector<const Ticket*>> batches;
+
+    auto itemsPerRun = (tickets.size() / 3);
+    auto remainingItems = (tickets.size() % 3);
+    auto itemsFirstRun = itemsPerRun + (remainingItems-- > 0 ? 1 : 0);
+    auto itemsSecondRun = itemsPerRun + (remainingItems-- > 0 ? 1 : 0);
+    auto itemsThirdRun = itemsPerRun;
+
+    std::vector<const Ticket*>::const_iterator position = tickets.begin();
+    batches.emplace_back(std::vector<const Ticket*> { position, position + itemsFirstRun + itemsSecondRun});
+    position += itemsFirstRun;
+
+    batches.emplace_back(std::vector<const Ticket*> { position, position + itemsSecondRun + itemsThirdRun});
+    position += itemsSecondRun;
+
+    auto thirdRun = std::vector<const Ticket*> { position, position + itemsThirdRun};
+    position = tickets.begin();
+    auto thirdRunSecondPart = std::vector<const Ticket*> { position, position + itemsFirstRun};
+    thirdRun.insert(thirdRun.end(), thirdRunSecondPart.begin(), thirdRunSecondPart.end());
+    batches.emplace_back(thirdRun);
+
+    return batches;
 }

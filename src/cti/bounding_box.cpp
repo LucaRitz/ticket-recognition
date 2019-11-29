@@ -1,6 +1,6 @@
 #include <include/bounding_box.hpp>
 
-cti::BoundingBox::BoundingBox(cti::Point &topLeft, cti::Point &bottomRight)  : _topLeft(topLeft), _bottomRight(bottomRight) {
+cti::BoundingBox::BoundingBox(const cti::Point &topLeft, const cti::Point &bottomRight)  : _topLeft(topLeft), _bottomRight(bottomRight) {
 
 }
 

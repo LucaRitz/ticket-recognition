@@ -9,4 +9,7 @@ target_sources(ticket_recognition_lib PUBLIC
         ticket_match.cpp
         ticket.cpp
         )
-add_subdirectory(sift)
+add_subdirectory(matching)
+add_subdirectory(extraction)
+add_subdirectory(ocr)
+add_subdirectory(timer)

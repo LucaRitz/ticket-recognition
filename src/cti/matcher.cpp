@@ -1,5 +1,5 @@
 #include <include/matcher.hpp>
-#include <include/algorithm/matching_algorithm.hpp>
+#include <include/matching/matching_algorithm.hpp>
 #include <include/ticket.hpp>
 #include <include/ticket_match.hpp>
 #include <include/ticket_image.hpp>
