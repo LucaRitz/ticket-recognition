@@ -1,5 +1,4 @@
 expected_template_id geschenkgutschein
-image resources/images/input/geschenkgutschein_1.jpg
 image resources/images/input/geschenkgutschein_1_regular.jpg
 image resources/images/input/geschenkgutschein_1_tilted.jpg
 image resources/images/input/geschenkgutschein_1_covered.jpg

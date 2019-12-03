@@ -1,5 +1,4 @@
 expected_template_id equiart
-image resources/images/input/equiart_2.jpg
 image resources/images/input/equiart_2_regular.jpg
 image resources/images/input/equiart_2_tilted.jpg
 image resources/images/input/equiart_2_covered.jpg

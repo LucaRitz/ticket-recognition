@@ -1,5 +1,4 @@
 expected_template_id walliserstuba
-image resources/images/input/walliserstuba_2.jpg
 image resources/images/input/walliserstuba_2_regular.jpg
 image resources/images/input/walliserstuba_2_tilted.jpg
 image resources/images/input/walliserstuba_2_covered.jpg

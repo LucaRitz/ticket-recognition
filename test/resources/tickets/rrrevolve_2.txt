@@ -1,5 +1,4 @@
 expected_template_id rrrevolve
-image resources/images/input/rrrevolve_2.jpg
 image resources/images/input/rrrevolve_2_regular.jpg
 image resources/images/input/rrrevolve_2_tilted.jpg
 image resources/images/input/rrrevolve_2_covered.jpg

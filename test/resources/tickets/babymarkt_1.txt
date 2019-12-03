@@ -1,5 +1,4 @@
 expected_template_id babymarkt
-image resources/images/input/babymarkt_1.jpg
 image resources/images/input/babymarkt_1_regular.jpg
 image resources/images/input/babymarkt_1_tilted.jpg
 image resources/images/input/babymarkt_1_covered.jpg

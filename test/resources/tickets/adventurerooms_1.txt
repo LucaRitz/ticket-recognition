@@ -1,5 +1,4 @@
 expected_template_id adventurerooms
-image resources/images/input/adventurerooms_1.png
 image resources/images/input/adventurerooms_1_regular.jpg
 image resources/images/input/adventurerooms_1_tilted.jpg
 image resources/images/input/adventurerooms_1_covered.jpg

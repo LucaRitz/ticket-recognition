@@ -1,5 +1,4 @@
 expected_template_id kneippgarten
-image resources/images/input/kneippgarten_1.png
 image resources/images/input/kneippgarten_1_rotated.jpg
 image resources/images/input/kneippgarten_1_distance.jpg
 expected_text value;25__CHF

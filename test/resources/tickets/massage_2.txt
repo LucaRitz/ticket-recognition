@@ -1,5 +1,4 @@
 expected_template_id massage
-image resources/images/input/massage_2.jpg
 image resources/images/input/massage_2_regular.jpg
 image resources/images/input/massage_2_tilted.jpg
 image resources/images/input/massage_2_covered.jpg
