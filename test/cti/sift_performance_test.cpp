@@ -163,9 +163,9 @@ double runMatching(std::vector<const Ticket *>& tickets, std::vector<TestCase*>&
             });
 
             std::cout << (correctMatch ? "correct" : "incorrect")
-                        << " match: " << matchName
-                        << " expected: " << expectedName
-                        << " took " << matchingTime << "ms" << std::endl;
+                      << " match: " << matchName
+                      << " expected: " << expectedName
+                      << " took " << matchingTime << "ms" << std::endl;
             totalMatchingTime += matchingTime;
         }
     }
@@ -205,11 +205,16 @@ double runExtraction(std::vector<const Ticket *>& tickets, std::vector<TestCase*
                 TicketImage inputImage { imagePath };
                 const cti::Metadata* const metadata = reader.read(*matchedTicket, inputImage);
                 totalScore += calcExtractionScore(testcase, metadata);
+
+                // TODO: remove debugging code
+//                for (auto &text : metadata->texts()) {
+//                    std::cout << "Extracted text '" << text.first << "' : '" << text.second << "'" << std::endl;
+//                }
             }
         }
     });
     std::cout << "SCORE: " << totalScore / totalCases << " testcases=" << totalCases
-                << " time=" << time << "ms"  << " = " << ((double)time / testcases.size()) << "ms/testcase"<< std::endl;
+              << " time=" << time << "ms"  << " = " << ((double)time / testcases.size()) << "ms/testcase"<< std::endl;
     return totalScore / totalCases;
 }
 
@@ -242,6 +247,17 @@ cti::reader::ConfusionMatrix calcMatchingScore(std::vector<const Ticket *>& tick
     return result;
 }
 
+// Source: https://stackoverflow.com/a/3418285
+void replaceAll(std::string& str, const std::string& from, const std::string& to) {
+    if(from.empty())
+        return;
+    size_t start_pos = 0;
+    while((start_pos = str.find(from, start_pos)) != std::string::npos) {
+        str.replace(start_pos, from.length(), to);
+        start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+    }
+}
+
 double calcExtractionScore(TestCase* testcase, const cti::Metadata* const metadata) {
 
     int correct = 0;
@@ -260,13 +276,18 @@ double calcExtractionScore(TestCase* testcase, const cti::Metadata* const metada
         } else {
             string actualText = actualTextIt->second;
 
+            // TODO: Tesseract has a tendency to recognize '—' instead of '-'. Should we replace this?
+            // TODO: Any application using this library will need to sanitize the text retrieved using this library
+            // TODO: therefor, that application will know, whether a hyphen can occur in the specific string
+            replaceAll(actualText, "—", "-");
+
             if(actualText == expectedText.second) {
                 correct++;
             } else {
                 std::cout << "Incorrect text: key=" << expectedText.first
-                        << " expected_text='" << expectedText.second << "'"
-                        << " actual_text='" << actualText << "'"
-                        << std::endl;
+                          << " expected_text='" << expectedText.second << "'"
+                          << " actual_text='" << actualText << "'"
+                          << std::endl;
                 incorrect++;
             }
         }
