@@ -30,14 +30,12 @@ include_directories(${ticket_recognition_SOURCE_DIR}/src)
 
 add_library(ticket_recognition_lib SHARED)
 target_compile_definitions(ticket_recognition_lib PUBLIC MAKEDLL)
-add_executable(ticket_recognition)
 
 add_subdirectory(src)
 
 target_link_libraries(ticket_recognition_lib ${OpenCV_LIBS})
 target_link_libraries(ticket_recognition_lib ${Leptonica_LIBRARIES})
 target_link_libraries(ticket_recognition_lib ${Tesseract_LIBRARIES})
-target_link_libraries(ticket_recognition ticket_recognition_lib)
 
 add_subdirectory(test)
 

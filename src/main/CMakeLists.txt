@@ -1,1 +1,0 @@
-target_sources(ticket_recognition PUBLIC main.cpp)

@@ -1,4 +1,8 @@
 #include <include/exception/cti_exception.hpp>
 
-cti::CtiException::CtiException(const std::string& message) : exception(message.c_str()) {
+cti::CtiException::CtiException(std::string message) : _message(std::move(message)) {
+}
+
+const char* cti::CtiException::what() const noexcept {
+    return _message.c_str();
 }
