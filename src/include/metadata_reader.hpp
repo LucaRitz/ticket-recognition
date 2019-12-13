@@ -1,11 +1,11 @@
 #pragma once
 
 #include "dllmacro.h"
+#include <include/metadata.hpp>
 
 namespace cti {
 
     class TicketImage;
-    class Metadata;
     class Ticket;
     class ExtractionAlgorithm;
 

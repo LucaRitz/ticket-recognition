@@ -5,8 +5,6 @@
 
 namespace cti {
 
-    class Point;
-
     /**
      * Rectangular bounding box on a TicketImage.
      */
@@ -18,7 +16,7 @@ namespace cti {
          * @param topLeft Point/Coordinate of the top-left corner.
          * @param bottomRight Point/Coordinate of the bottom-right corner.
          */
-        BoundingBox(const Point topLeft, const Point bottomRight) noexcept(false);
+        BoundingBox(Point topLeft, Point bottomRight) noexcept(false);
 
         BoundingBox(const BoundingBox&) = default;
         BoundingBox(BoundingBox&&) = delete;
