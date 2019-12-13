@@ -146,7 +146,9 @@ vector<cti::TicketMatch> cti::impl::MatchingAlgorithmImpl::execute(const cti::Ti
     return matches;
 }
 
-std::pair<cti::TicketMatch*, cti::TicketMatch*> cti::impl::MatchingAlgorithmImpl::findBestTwoMatches(vector<cti::TicketMatch>& matches) const {
+std::pair<cti::TicketMatch*, cti::TicketMatch*> cti::impl::MatchingAlgorithmImpl::findBestTwoMatches(
+        vector<cti::TicketMatch>& matches) const {
+
     cti::TicketMatch* bestMatch = nullptr;
     cti::TicketMatch* secondBestMatch = nullptr;
     for(auto& match : matches) {
@@ -160,7 +162,8 @@ std::pair<cti::TicketMatch*, cti::TicketMatch*> cti::impl::MatchingAlgorithmImpl
     return std::make_pair(bestMatch, secondBestMatch);
 }
 
-bool cti::impl::MatchingAlgorithmImpl::isBestMatchGood(cti::TicketMatch* bestMatch, cti::TicketMatch* secondBestMatch) const {
+bool cti::impl::MatchingAlgorithmImpl::isBestMatchGood(
+        cti::TicketMatch* bestMatch, cti::TicketMatch* secondBestMatch) const {
 
     if(bestMatch != nullptr && secondBestMatch != nullptr) {
         // Best match must be a good match
@@ -175,6 +178,7 @@ bool cti::impl::MatchingAlgorithmImpl::isBestMatchGood(cti::TicketMatch* bestMat
 }
 
 const optional<cti::TicketMatch> cti::impl::MatchingAlgorithmImpl::select(vector<cti::TicketMatch>& matches) const {
+
     if(matches.size() > 1) {
         auto bestTwo = findBestTwoMatches(matches);
         if(isBestMatchGood(bestTwo.first, bestTwo.second)) {
@@ -182,6 +186,7 @@ const optional<cti::TicketMatch> cti::impl::MatchingAlgorithmImpl::select(vector
         }
         return std::nullopt;
     }
+
     if(matches.size() == 1) {
         // Match must be a good match
         if(matches.at(0).score() >= scoreThreshold) {
@@ -189,10 +194,12 @@ const optional<cti::TicketMatch> cti::impl::MatchingAlgorithmImpl::select(vector
         }
         return std::nullopt;
     }
+
     return std::nullopt;
 }
 
-vector<cv::DMatch> cti::impl::MatchingAlgorithmImpl::ratioTest(const vector<vector<cv::DMatch>>& knnMatches, double threshold) const {
+vector<cv::DMatch> cti::impl::MatchingAlgorithmImpl::ratioTest(
+        const vector<vector<cv::DMatch>>& knnMatches, double threshold) const {
 
     vector<DMatch> matches;
     for (auto &match : knnMatches) {

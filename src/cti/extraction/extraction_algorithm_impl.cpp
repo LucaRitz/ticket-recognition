@@ -24,7 +24,8 @@ cti::impl::ExtractionAlgorithmImpl::ExtractionAlgorithmImpl(
 
 }
 
-cti::TicketImage* cti::impl::ExtractionAlgorithmImpl::normalize(const cti::Ticket &ticketTemplate, const cti::TicketImage &ticketImage) const {
+cti::TicketImage* cti::impl::ExtractionAlgorithmImpl::normalize(
+        const cti::Ticket &ticketTemplate, const cti::TicketImage &ticketImage) const {
 
     const TicketImage &image = ticketTemplate.image();
     const Mat templateImage = Mat(image.height(), image.width(), CV_8UC(image.bytesPerPixel()), image.image());
@@ -98,8 +99,8 @@ cti::TicketImage* cti::impl::ExtractionAlgorithmImpl::normalize(const cti::Ticke
     return nullptr;
 }
 
-cti::Metadata *
-cti::impl::ExtractionAlgorithmImpl::read(const cti::Ticket &ticketTemplate, cti::TicketImage &ticketImage) const {
+cti::Metadata cti::impl::ExtractionAlgorithmImpl::read(
+        const cti::Ticket &ticketTemplate, cti::TicketImage &ticketImage) const {
 
     const Mat inputImage = Mat(ticketImage.height(), ticketImage.width(), CV_8UC(ticketImage.bytesPerPixel()),
                                ticketImage.image());
@@ -112,31 +113,32 @@ cti::impl::ExtractionAlgorithmImpl::read(const cti::Ticket &ticketTemplate, cti:
             map.insert({textDefinition->key(), text});
         }
     }
-    return new cti::Metadata(map);
+    return cti::Metadata(map);
 }
 
-const cti::BoundingBox cti::impl::ExtractionAlgorithmImpl::clampToImage(const cti::BoundingBox& boundingBox, const cti::TicketImage& inputImage) const {
+const cti::BoundingBox cti::impl::ExtractionAlgorithmImpl::clampToImage(
+        const cti::BoundingBox& boundingBox, const cti::TicketImage& inputImage) const {
 
-    const cti::Point* bottomRight = new cti::Point {
+    const cti::Point bottomRight = cti::Point {
             inputImage.width() > boundingBox.bottomRight().x() ? boundingBox.bottomRight().x() : inputImage.width(),
             inputImage.height() > boundingBox.bottomRight().y() ? boundingBox.bottomRight().y() : inputImage.height(),
     };
 
     const cti::BoundingBox clamped {
             boundingBox.topLeft(),
-            *bottomRight
+            bottomRight
     };
 
     return clamped;
 }
 
-string cti::impl::ExtractionAlgorithmImpl::extractText(const Ticket& ticket, const cti::Text* textDefinition, const cti::TicketImage& inputImage) const {
+string cti::impl::ExtractionAlgorithmImpl::extractText(
+        const Ticket& ticket, const cti::Text* textDefinition, const cti::TicketImage& inputImage) const {
 
     const auto& boundingBox = this->clampToImage(textDefinition->boundingBox(), inputImage);
 
     string text = ocr->read(inputImage, ticket, boundingBox);
     postProcessText(text);
-    delete &boundingBox.bottomRight();
 
     return text;
 }
@@ -149,8 +151,8 @@ void cti::impl::ExtractionAlgorithmImpl::postProcessText(string& text) const {
     }
 }
 
-
 cti::TicketImage* cti::impl::ExtractionAlgorithmImpl::matToTicketImage(const cv::Mat& image) const {
+
     size_t dataSize = image.total() * image.elemSize();
     auto* imageData = new unsigned char[dataSize];
     memcpy(imageData, image.data, dataSize);
@@ -159,7 +161,8 @@ cti::TicketImage* cti::impl::ExtractionAlgorithmImpl::matToTicketImage(const cv:
     return ticketImage;
 }
 
-std::vector<cv::DMatch> cti::impl::ExtractionAlgorithmImpl::ratioTest(const std::vector<std::vector<cv::DMatch>>& knnMatches, double threshold) const {
+std::vector<cv::DMatch> cti::impl::ExtractionAlgorithmImpl::ratioTest(
+        const std::vector<std::vector<cv::DMatch>>& knnMatches, double threshold) const {
 
     vector<DMatch> matches;
     for (auto &match : knnMatches) {

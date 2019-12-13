@@ -25,6 +25,6 @@ namespace cti {
          * Read all Metadata from the given TicketImage which are specified in the given Ticket.
          * @return
          */
-        virtual Metadata* read(const Ticket&, TicketImage&) const = 0;
+        virtual Metadata read(const Ticket&, TicketImage&) const = 0;
     };
 }

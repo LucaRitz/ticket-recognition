@@ -21,6 +21,11 @@ namespace cti {
          */
         explicit Metadata(const unordered_map<string, string> texts);
 
+        Metadata(const Metadata&) = default;
+        Metadata(Metadata&&) = default;
+        Metadata& operator=(const Metadata&) = delete;
+        Metadata& operator=(Metadata&&) = delete;
+
         /**
          * Map of texts found on a ticket. The key is the Text's key property, the value is the text recognized by OCR.
          * @return

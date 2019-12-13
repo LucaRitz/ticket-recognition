@@ -6,11 +6,13 @@ cti::TicketMatch::TicketMatch(const cti::Ticket& ticket, const double score) : _
 
 }
 
-cti::TicketMatch::TicketMatch(const cti::TicketMatch& other) : _ticket(other._ticket), _score(other._score) {
+cti::TicketMatch::TicketMatch(const cti::TicketMatch& other)
+    : _ticket(other._ticket), _score(other._score) {
 
 }
 
-cti::TicketMatch::TicketMatch(cti::TicketMatch&& other) : _ticket(other._ticket), _score(other._score) {
+cti::TicketMatch::TicketMatch(cti::TicketMatch&& other)
+    : _ticket(other._ticket), _score(other._score) {
 
 }
 

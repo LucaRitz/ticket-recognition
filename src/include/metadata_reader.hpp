@@ -34,7 +34,7 @@ namespace cti {
          * This uses the ExtractionAlgorithm provided at construction of this class.
          * @return a pointer to a dynamically allocated instance of Metadata.
          */
-        const Metadata* const read(const Ticket&, const TicketImage&);
+        const Metadata read(const Ticket&, const TicketImage&) const;
 
     private:
         const ExtractionAlgorithm& _algorithm;

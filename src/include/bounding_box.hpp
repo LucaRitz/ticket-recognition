@@ -1,6 +1,7 @@
 #pragma once
 
 #include "dllmacro.h"
+#include <include/point.hpp>
 
 namespace cti {
 
@@ -17,7 +18,7 @@ namespace cti {
          * @param topLeft Point/Coordinate of the top-left corner.
          * @param bottomRight Point/Coordinate of the bottom-right corner.
          */
-        BoundingBox(const Point& topLeft, const Point& bottomRight) noexcept(false);
+        BoundingBox(const Point topLeft, const Point bottomRight) noexcept(false);
 
         BoundingBox(const BoundingBox&) = default;
         BoundingBox(BoundingBox&&) = delete;
@@ -37,7 +38,7 @@ namespace cti {
         const Point& bottomRight() const;
 
     private:
-        const Point& _topLeft;
-        const Point& _bottomRight;
+        const Point _topLeft;
+        const Point _bottomRight;
     };
 }

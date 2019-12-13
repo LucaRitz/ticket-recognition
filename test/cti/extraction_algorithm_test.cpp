@@ -26,7 +26,7 @@ using cti::reader::getAllTemplatesOf;
 using cti::reader::getAllTestsOf;
 using cti::reader::TestCase;
 
-double calcExtractionScore(TestCase* testcase, const cti::Metadata* const metadata);
+double calcExtractionScore(TestCase* testcase, const cti::Metadata& metadata);
 double runExtraction(std::vector<const Ticket *>& tickets, std::vector<TestCase*>& testcases, MetadataReader& reader);
 std::vector<std::vector<const Ticket*>> getBatchesOfTwoThirds(std::vector<const Ticket*>& tickets);
 
@@ -83,7 +83,7 @@ double runExtraction(std::vector<const Ticket *>& tickets, std::vector<TestCase*
                 }
 
                 TicketImage inputImage { imagePath };
-                const cti::Metadata* const metadata = reader.read(*matchedTicket, inputImage);
+                const cti::Metadata metadata = reader.read(*matchedTicket, inputImage);
                 totalScore += calcExtractionScore(testcase, metadata);
 
                 // TODO: remove debugging code
@@ -109,12 +109,12 @@ void replaceAll(std::string& str, const std::string& from, const std::string& to
     }
 }
 
-double calcExtractionScore(TestCase* testcase, const cti::Metadata* const metadata) {
+double calcExtractionScore(TestCase* testcase, const cti::Metadata& metadata) {
 
     int correct = 0;
     int incorrect = 0;
 
-    unordered_map<string, string> actualTexts = metadata->texts();
+    unordered_map<string, string> actualTexts = metadata.texts();
 
     for (auto &expectedText : testcase->getExpectedTexts()) {
 

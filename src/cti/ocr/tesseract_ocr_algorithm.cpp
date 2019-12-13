@@ -16,7 +16,8 @@ cti::impl::TesseractOcrAlgorithm::TesseractOcrAlgorithm(const string& language) 
     this->ocr->SetPageSegMode(tesseract::PSM_SINGLE_LINE);
 }
 
-string cti::impl::TesseractOcrAlgorithm::read(const cti::TicketImage& image, const Ticket& ticket, const cti::BoundingBox& boundingBox) const {
+string cti::impl::TesseractOcrAlgorithm::read(
+        const cti::TicketImage& image, const Ticket& ticket, const cti::BoundingBox& boundingBox) const {
 
     const TicketImage& templateTicketImage = ticket.image();
     const Mat templateImage = Mat(templateTicketImage.height(), templateTicketImage.width(), CV_8UC(templateTicketImage.bytesPerPixel()), templateTicketImage.image());
