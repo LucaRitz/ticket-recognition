@@ -13,9 +13,13 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
 option(CTI_DEBUG_TOGGLE "CTI Debugging" ON)
+set(CTI_DEBUG_TOGGLE "CTI Debugging" ON FORCE)
 
 if(CTI_DEBUG_TOGGLE)
+    message("CTI_DEBUG_TOGGLE is ON")
     add_definitions(-DCTI_DEBUG)
+else()
+    message("CTI_DEBUG_TOGGLE is OFF")
 endif()
 
 include(docs/doxygen.cmake)
