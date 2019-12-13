@@ -10,8 +10,10 @@
 #include <include/metadata.hpp>
 #include <include/matching/matching_algorithm.hpp>
 #include <include/matching/matching_algorithms.hpp>
+#include <include/matching/matching_options.hpp>
 #include <include/extraction/extraction_algorithm.hpp>
 #include <include/extraction/extraction_algorithms.hpp>
+#include <include/extraction/extraction_options.hpp>
 #include <reader/reader.hpp>
 #include <reader/test_case.hpp>
 #include <reader/confusion_matrix.hpp>
@@ -28,8 +30,10 @@ using cti::Text;
 using cti::Metadata;
 using cti::MatchingAlgorithm;
 using cti::MatchingAlgorithms;
+using cti::MatchingOptions;
 using cti::ExtractionAlgorithm;
 using cti::ExtractionAlgorithms;
+using cti::ExtractionOptions;
 using cti::reader::getAllTemplatesOf;
 using cti::reader::getAllTestsOf;
 using cti::reader::TestCase;
@@ -52,7 +56,7 @@ TEST(siftMatching, performance) {
     double totalScore = 0.0;
     int numberOfBatches = 0;
     for(auto& batch : getBatchesOfTwoThirds(tickets)) {
-        std::shared_ptr<MatchingAlgorithm> matchingAlgorithm = MatchingAlgorithms::sift();
+        std::shared_ptr<MatchingAlgorithm> matchingAlgorithm = MatchingAlgorithms::sift(MatchingOptions());
         Matcher matcher(*matchingAlgorithm);
         totalScore += runMatching(batch, testcases, matcher);
         numberOfBatches++;
@@ -74,7 +78,7 @@ TEST(orbMatching, performance) {
     double totalScore = 0.0;
     int numberOfBatches = 0;
     for(auto& batch : getBatchesOfTwoThirds(tickets)) {
-        std::shared_ptr<MatchingAlgorithm> matchingAlgorithm = MatchingAlgorithms::orb();
+        std::shared_ptr<MatchingAlgorithm> matchingAlgorithm = MatchingAlgorithms::orb(MatchingOptions());
         Matcher matcher(*matchingAlgorithm);
         totalScore += runMatching(batch, testcases, matcher);
         numberOfBatches++;
@@ -93,7 +97,7 @@ TEST(siftExtraction, performance) {
     std::vector<const Ticket*> tickets = getAllTemplatesOf("resources/templates");
     std::vector<TestCase*> testcases = getAllTestsOf("resources/tickets");
 
-    std::shared_ptr<ExtractionAlgorithm> extractionAlgorithm = ExtractionAlgorithms::sift();
+    std::shared_ptr<ExtractionAlgorithm> extractionAlgorithm = ExtractionAlgorithms::sift(ExtractionOptions());
     MetadataReader reader(*extractionAlgorithm);
 
     runExtraction(tickets, testcases, reader);
@@ -110,7 +114,7 @@ TEST(orbExtraction, performance) {
     std::vector<const Ticket *> tickets = getAllTemplatesOf("resources/templates");
     std::vector<TestCase*> testcases = getAllTestsOf("resources/tickets");
 
-    std::shared_ptr<ExtractionAlgorithm> extractionAlgorithm = ExtractionAlgorithms::orb();
+    std::shared_ptr<ExtractionAlgorithm> extractionAlgorithm = ExtractionAlgorithms::orb(ExtractionOptions());
     MetadataReader reader(*extractionAlgorithm);
 
     runExtraction(tickets, testcases, reader);
