@@ -8,10 +8,6 @@ RUN apt-get -y update && apt-get install -y && apt-get -y upgrade
 RUN apt-get -y install clang
 RUN apt-get -y install make
 
-# Install useful libs
-RUN apt-get -y install vim
-RUN apt-get -y install curl
-
 # Install required cmake version
 ADD https://cmake.org/files/v3.14/cmake-3.14.1-Linux-x86_64.sh /cmake-3.14.1-Linux-x86_64.sh
 RUN mkdir /opt/cmake

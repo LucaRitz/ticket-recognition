@@ -6,5 +6,4 @@ cmake -G"$CMAKE_CONFIG_GENERATOR" -DCMAKE_INSTALL_PREFIX="$myRepo"/build -DPROJE
 echo "************************* $Source_DIR -->debug"
 cmake --build .  --config release
 cmake --build .  --target ticket_recognition_lib --config release
-cmake --build .  --target ticket_recognition --config release
 cmake --build .  --target ticket_recognition_test --config release
