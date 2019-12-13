@@ -16,6 +16,10 @@ void cti::Matcher::train(const vector<const cti::Ticket*>& ticketTemplates) {
     _algorithm.train(ticketTemplates);
 }
 
+void cti::Matcher::untrain(const cti::Ticket& ticket) {
+    _algorithm.untrain(ticket);
+}
+
 const std::optional<const cti::TicketMatch> cti::Matcher::match(const cti::TicketImage& ticket) const {
     vector<TicketMatch> matches = _algorithm.execute(ticket);
     return _algorithm.select(matches);
