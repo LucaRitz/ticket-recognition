@@ -35,6 +35,7 @@ namespace cti {
         TicketImage(TicketImage&&) = delete;
         TicketImage &operator=(const TicketImage&) = delete;
         TicketImage &operator=(TicketImage&&) = delete;
+        ~TicketImage();
 
         /**
          * Image width in pixel.

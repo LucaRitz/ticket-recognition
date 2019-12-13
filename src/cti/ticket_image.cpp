@@ -50,6 +50,10 @@ cti::TicketImage::TicketImage(
 
 }
 
+cti::TicketImage::~TicketImage() {
+    delete[] _image;
+}
+
 int cti::TicketImage::width() const {
     return _width;
 }
