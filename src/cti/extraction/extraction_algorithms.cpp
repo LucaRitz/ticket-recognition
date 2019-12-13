@@ -13,7 +13,7 @@ cti::ExtractionAlgorithms::ExtractionAlgorithms() = default;
 
 std::unique_ptr<cti::ExtractionAlgorithm> cti::ExtractionAlgorithms::orb(const ExtractionOptions& options) {
     return std::make_unique<cti::impl::ExtractionAlgorithmImpl>(
-            0.7,
+            options.ratioTestThreshold(),
             cv::ORB::create(),
             cv::makePtr<cv::FlannBasedMatcher>(
                     cv::FlannBasedMatcher{cv::makePtr<cv::flann::LshIndexParams>(12, 20, 2)}),
@@ -23,7 +23,7 @@ std::unique_ptr<cti::ExtractionAlgorithm> cti::ExtractionAlgorithms::orb(const E
 
 std::unique_ptr<cti::ExtractionAlgorithm> cti::ExtractionAlgorithms::sift(const ExtractionOptions& options) {
     return std::make_unique<cti::impl::ExtractionAlgorithmImpl>(
-            0.7,
+            options.ratioTestThreshold(),
             cv::xfeatures2d::SIFT::create(),
             cv::makePtr<cv::FlannBasedMatcher>(cv::FlannBasedMatcher{}),
             std::make_unique<cti::impl::TesseractOcrAlgorithm>(options.language())
