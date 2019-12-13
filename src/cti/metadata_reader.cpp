@@ -2,7 +2,6 @@
 #include <include/extraction/extraction_algorithm.hpp>
 #include <include/ticket.hpp>
 #include <include/ticket_image.hpp>
-#include <include/metadata.hpp>
 
 cti::MetadataReader::MetadataReader(const cti::ExtractionAlgorithm& algorithm) : _algorithm(algorithm) {
 
