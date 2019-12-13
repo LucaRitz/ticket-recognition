@@ -25,6 +25,7 @@ namespace cti::impl {
         ); // TODO: tweak parameter
         void train(const Ticket &) override;
         void train(const vector<const Ticket *> &) override;
+        void untrain(const Ticket& ticket) override;
         vector<TicketMatch> execute(const TicketImage &) override;
         const optional<TicketMatch> select(vector<TicketMatch> &) const override;
 

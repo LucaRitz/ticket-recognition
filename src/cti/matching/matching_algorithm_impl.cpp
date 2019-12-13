@@ -47,6 +47,10 @@ void cti::impl::MatchingAlgorithmImpl::train(const vector<const cti::Ticket*>& t
     }
 }
 
+void cti::impl::MatchingAlgorithmImpl::untrain(const cti::Ticket& ticket) {
+    // TODO: implement
+}
+
 vector<cti::TicketMatch> cti::impl::MatchingAlgorithmImpl::execute(const cti::TicketImage& ticketImage) {
 
     const Mat inputImage = Mat(ticketImage.height(), ticketImage.width(), CV_8UC(ticketImage.bytesPerPixel()), ticketImage.image());
