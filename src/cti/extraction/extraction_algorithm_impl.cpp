@@ -74,7 +74,7 @@ cti::TicketImage* cti::impl::ExtractionAlgorithmImpl::normalize(const cti::Ticke
     if (!homography.empty()) {
 
         Mat warped;
-        int warpTime = cti::Timer::timed([this, inputImage, &warped, homography, &ticketTemplate] () {
+        int warpTime = cti::Timer::timed([this, &inputImage, &warped, homography, &ticketTemplate] () {
             warpPerspective(inputImage, warped, homography, inputImage.size());
         });
 
@@ -107,7 +107,7 @@ cti::impl::ExtractionAlgorithmImpl::read(const cti::Ticket &ticketTemplate, cti:
     std::unordered_map<string, string> map;
     for(auto& textDefinition : ticketTemplate.texts()) {
 
-        string text = this->extractText(textDefinition, ticketImage);
+        string text = this->extractText(ticketTemplate, textDefinition, ticketImage);
         if(!text.empty()) {
             map.insert({textDefinition->key(), text});
         }
@@ -130,11 +130,11 @@ const cti::BoundingBox cti::impl::ExtractionAlgorithmImpl::clampToImage(const ct
     return clamped;
 }
 
-string cti::impl::ExtractionAlgorithmImpl::extractText(const cti::Text* textDefinition, const cti::TicketImage& inputImage) const {
+string cti::impl::ExtractionAlgorithmImpl::extractText(const Ticket& ticket, const cti::Text* textDefinition, const cti::TicketImage& inputImage) const {
 
     const auto& boundingBox = this->clampToImage(textDefinition->boundingBox(), inputImage);
 
-    string text = ocr->read(inputImage, boundingBox);
+    string text = ocr->read(inputImage, ticket, boundingBox);
     postProcessText(text);
     delete &boundingBox.bottomRight();
 

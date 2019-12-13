@@ -19,8 +19,8 @@ namespace cti::impl {
                 double ratioTestThreshold = 0.7,
                 cv::Ptr<cv::Feature2D> feature2d = cv::xfeatures2d::SIFT::create(),
                 cv::Ptr<cv::DescriptorMatcher> matcher = cv::makePtr<cv::FlannBasedMatcher>(cv::FlannBasedMatcher {}),
-                std::unique_ptr<cti::OcrAlgorithm> ocr = cti::OcrAlgorithms::tesseract("deu")
-                ); // TODO: tweak parameter
+                std::unique_ptr<cti::OcrAlgorithm> ocr = cti::OcrAlgorithms::tesseract("eng")
+                );
         cti::TicketImage* normalize(const Ticket&, const TicketImage&) const override;
         Metadata* read(const Ticket&, TicketImage&) const override;
     private:
@@ -28,7 +28,7 @@ namespace cti::impl {
         const cv::Ptr<cv::DescriptorMatcher> matcher;
         const std::unique_ptr<cti::OcrAlgorithm> ocr;
 
-        std::string extractText(const cti::Text* textDefinition, const cti::TicketImage& inputImage) const;
+        std::string extractText(const Ticket& ticket, const cti::Text* textDefinition, const cti::TicketImage& inputImage) const;
         const cti::BoundingBox clampToImage(const cti::BoundingBox& boundingBox, const cti::TicketImage& inputImage) const;
         void postProcessText(string& text) const;
         cti::TicketImage* matToTicketImage(const cv::Mat& image) const;
