@@ -22,7 +22,7 @@ namespace cti::impl {
                 double scoreThreshold = 1000.0,
                 cv::Ptr<cv::Feature2D> feature2d = cv::xfeatures2d::SIFT::create(),
                 cv::Ptr<cv::DescriptorMatcher> matcher = cv::makePtr<cv::FlannBasedMatcher>(cv::FlannBasedMatcher{})
-        ); // TODO: tweak parameter
+        );
         void train(const Ticket &) override;
         void train(const vector<const Ticket *> &) override;
         void untrain(const Ticket& ticket) override;

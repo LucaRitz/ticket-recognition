@@ -8,6 +8,7 @@
 #include <leptonica/allheaders.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
+#include <include/exception/cti_exception.hpp>
 #include "../timer/timer.hpp"
 
 using namespace cv;
@@ -25,7 +26,7 @@ cti::impl::ExtractionAlgorithmImpl::ExtractionAlgorithmImpl(
 }
 
 cti::TicketImage* cti::impl::ExtractionAlgorithmImpl::normalize(
-        const cti::Ticket &ticketTemplate, const cti::TicketImage &ticketImage) const {
+        const cti::Ticket &ticketTemplate, const cti::TicketImage &ticketImage) const noexcept(false) {
 
     const TicketImage &image = ticketTemplate.image();
     const Mat templateImage = Mat(image.height(), image.width(), CV_8UC(image.bytesPerPixel()), image.image());
@@ -56,8 +57,7 @@ cti::TicketImage* cti::impl::ExtractionAlgorithmImpl::normalize(
 
     if(matches.size() < 4) {
         // Cannot find homography with less than 4 points
-        // TODO: throw error?
-        return nullptr;
+        throw CtiException { "Ticket does not seem to match TicketImage. Unable to find enough correspondence points." };
     }
 
     vector<Point2f> templatePoints;
@@ -69,7 +69,7 @@ cti::TicketImage* cti::impl::ExtractionAlgorithmImpl::normalize(
 
     Mat homography;
     int homographyTime = cti::Timer::timed([this, inputPoints, templatePoints, &homography] () {
-        homography = findHomography(inputPoints, templatePoints, RANSAC); // TODO: tweak parameter
+        homography = findHomography(inputPoints, templatePoints, RANSAC);
     });
 
     if (!homography.empty()) {
@@ -93,14 +93,13 @@ cti::TicketImage* cti::impl::ExtractionAlgorithmImpl::normalize(
         return normalizedImage;
 
     } else {
-        std::cout << "Unable to find homography" << std::endl;
-        // TODO: throw error?
+        throw CtiException { "Ticket does not seem to match TicketImage. Unable to find geometric transformation." };
     }
     return nullptr;
 }
 
 cti::Metadata cti::impl::ExtractionAlgorithmImpl::read(
-        const cti::Ticket &ticketTemplate, cti::TicketImage &ticketImage) const {
+        const cti::Ticket &ticketTemplate, cti::TicketImage &ticketImage) const noexcept(false) {
 
     const Mat inputImage = Mat(ticketImage.height(), ticketImage.width(), CV_8UC(ticketImage.bytesPerPixel()),
                                ticketImage.image());

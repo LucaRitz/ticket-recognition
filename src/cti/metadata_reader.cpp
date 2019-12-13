@@ -3,11 +3,13 @@
 #include <include/ticket.hpp>
 #include <include/ticket_image.hpp>
 
-cti::MetadataReader::MetadataReader(const cti::ExtractionAlgorithm& algorithm) : _algorithm(algorithm) {
+cti::MetadataReader::MetadataReader(const cti::ExtractionAlgorithm& algorithm)
+    : _algorithm(algorithm) {
 
 }
 
-const cti::Metadata cti::MetadataReader::read(const cti::Ticket& ticketTemplate, const cti::TicketImage& ticket) const {
+const cti::Metadata cti::MetadataReader::read(
+        const cti::Ticket& ticketTemplate, const cti::TicketImage& ticket) const noexcept(false) {
 
     cti::TicketImage* normalizedImage = _algorithm.normalize(ticketTemplate, ticket);
     if(normalizedImage == nullptr) {

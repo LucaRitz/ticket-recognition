@@ -96,7 +96,7 @@ vector<cti::TicketMatch> cti::impl::MatchingAlgorithmImpl::execute(const cti::Ti
         Mat homography;
         Mat inlierMask;
         int homographyTime = cti::Timer::timed([this, &inputPoints, &templatePoints, &homography, &inlierMask] () {
-            homography = findHomography(inputPoints, templatePoints, RANSAC, 3, inlierMask); // TODO: tweak parameter
+            homography = findHomography(inputPoints, templatePoints, RANSAC, 3, inlierMask);
         });
 
         bool matched = true;

@@ -14,6 +14,7 @@ include_directories(${ticket_recognition_SOURCE_DIR}/test)
 add_executable(ticket_recognition_test)
 add_subdirectory(cti)
 add_subdirectory(reader)
+add_subdirectory(io)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     target_link_libraries(ticket_recognition_test stdc++fs)

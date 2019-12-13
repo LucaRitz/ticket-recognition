@@ -16,16 +16,10 @@
 #include <algorithm>
 #include <experimental/filesystem>
 #include <regex>
+#include "../io/file_util.hpp"
 
 using cti::Text;
 namespace fs = std::experimental::filesystem;
-
-const char kPathSeparator =
-#ifdef _WIN32
-        '\\';
-#else
-        '/';
-#endif
 
 template<char delimiter>
 class Delimiter : public std::string {
@@ -35,18 +29,6 @@ public:
         return is;
     }
 };
-
-namespace cti::reader {
-    std::string replaceDirectorySeparator(std::string_view);
-}
-
-std::string cti::reader::replaceDirectorySeparator(std::string_view value) {
-    std::string normalizedPath(value);
-    if ('\\' == kPathSeparator) {
-        std::replace(normalizedPath.begin(), normalizedPath.end(), '/', kPathSeparator);
-    }
-    return normalizedPath;
-}
 
 ///////////////////////////////////////////////////////////////////////
 // Templates
@@ -91,7 +73,7 @@ namespace cti::reader {
 
 std::vector<const cti::Ticket*> cti::reader::getAllTemplatesOf(std::string_view directoryPath) {
     std::vector<const cti::Ticket*> tickets;
-    std::string normalizedPath = replaceDirectorySeparator(directoryPath);
+    std::string normalizedPath = cti::io::replaceDirectorySeparator(directoryPath);
     for (const auto& entry : fs::directory_iterator(normalizedPath)) {
         tickets.push_back(getTemplateOf(entry.path().u8string()));
     }
@@ -133,13 +115,13 @@ void addText(Template& templateRef, const std::string& value) {
 }
 
 cti::Ticket* cti::reader::getTemplateOf(std::string_view path) {
-    std::string normalizedPath = replaceDirectorySeparator(path);
+    std::string normalizedPath = cti::io::replaceDirectorySeparator(path);
     Template templateValues;
     TemplatePointerMapping mapping;
     mapping[std::string_view("template_id")] = [](Template &templateRef,
                                                   const std::string& value) { templateRef._template_id = value; };
     mapping[std::string_view("image")] = [](Template &templateRef,
-                                            const std::string& value) { templateRef._imagePath = replaceDirectorySeparator(value); };
+                                            const std::string& value) { templateRef._imagePath = cti::io::replaceDirectorySeparator(value); };
     mapping[std::string_view("text")] = &addText;
 
     std::fstream file(normalizedPath);
@@ -184,7 +166,7 @@ namespace cti::reader {
 
 std::vector<cti::reader::TestCase*> cti::reader::getAllTestsOf(std::string_view directoryPath) {
     std::vector<cti::reader::TestCase*> testCases;
-    std::string normalizedPath = replaceDirectorySeparator(directoryPath);
+    std::string normalizedPath = cti::io::replaceDirectorySeparator(directoryPath);
     for (const auto& entry : fs::directory_iterator(normalizedPath)) {
         testCases.push_back(getTestOf(entry.path().u8string()));
     }
@@ -215,14 +197,14 @@ void addExpectedText(Case& caseRef, const std::string& value) {
 }
 
 cti::reader::TestCase* cti::reader::getTestOf(std::string_view path) {
-    std::string normalizedPath = replaceDirectorySeparator(path);
+    std::string normalizedPath = cti::io::replaceDirectorySeparator(path);
     Case caseValues;
     TestCasePointerMapping mapping;
     mapping[std::string_view("expected_template_id")] = [](Case& caseValuesRef, const std::string& value) {
         caseValuesRef._expectedTemplateId = value;
     };
     mapping[std::string_view("image")] = [](Case& caseValuesRef, const std::string& value) {
-        caseValuesRef._images.push_back(replaceDirectorySeparator(value));
+        caseValuesRef._images.push_back(cti::io::replaceDirectorySeparator(value));
     };
     mapping[std::string_view("expected_text")] = &addExpectedText;
 

@@ -2,7 +2,8 @@
 
 #include <include/ticket.hpp>
 
-cti::TicketMatch::TicketMatch(const cti::Ticket& ticket, const double score) : _ticket(ticket), _score(score) {
+cti::TicketMatch::TicketMatch(const cti::Ticket& ticket, double score)
+    : _ticket(ticket), _score(score) {
 
 }
 
@@ -20,6 +21,6 @@ const cti::Ticket& cti::TicketMatch::ticket() const {
     return _ticket;
 }
 
-const double cti::TicketMatch::score() const {
+double cti::TicketMatch::score() const {
     return _score;
 }

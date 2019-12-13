@@ -15,6 +15,7 @@ namespace cti {
          * Constructs a BoundingBox limited by the given top-left and bottom-right corner coordinates.
          * @param topLeft Point/Coordinate of the top-left corner.
          * @param bottomRight Point/Coordinate of the bottom-right corner.
+         * @throw CtiException if the rectangle is invaild.
          */
         BoundingBox(Point topLeft, Point bottomRight) noexcept(false);
 

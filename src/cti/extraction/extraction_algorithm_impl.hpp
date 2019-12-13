@@ -21,8 +21,8 @@ namespace cti::impl {
                 cv::Ptr<cv::DescriptorMatcher> matcher = cv::makePtr<cv::FlannBasedMatcher>(cv::FlannBasedMatcher {}),
                 std::unique_ptr<cti::OcrAlgorithm> ocr = cti::OcrAlgorithms::tesseract("eng")
                 );
-        cti::TicketImage* normalize(const Ticket&, const TicketImage&) const override;
-        Metadata read(const Ticket&, TicketImage&) const override;
+        cti::TicketImage* normalize(const Ticket&, const TicketImage&) const noexcept(false) override;
+        Metadata read(const Ticket&, TicketImage&) const noexcept(false) override;
     private:
         const cv::Ptr<cv::Feature2D> feature2d;
         const cv::Ptr<cv::DescriptorMatcher> matcher;

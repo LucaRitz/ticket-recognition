@@ -29,6 +29,7 @@ namespace cti {
          * @param name Identification of a Ticket. Must be unique among a set of Tickets.
          * @param image Image of the Ticket used as a reference in the matching phase.
          * @param texts Set of Texts that can be found in a TicketImage if it is an image of this Ticket.
+         * @throw CtiException if any of the provided Texts' BoundingBox lies outside of the given TicketImage's bounds.
          */
         Ticket(string name, const TicketImage& image, vector<const Text*>& texts) noexcept(false);
 
