@@ -21,27 +21,27 @@ namespace cti::reader {
             return result;
         }
 
-        const double accuracy() const {
+        inline double accuracy() const {
             return (double)(truePositives() + trueNegatives()) / total();
         }
 
-        const int truePositives() const {
+        inline int truePositives() const {
             return _truePositives;
         }
 
-        const int trueNegatives() const {
+        inline int trueNegatives() const {
             return _trueNegatives;
         }
 
-        const int falsePositives() const {
+        inline int falsePositives() const {
             return _falsePositives;
         }
 
-        const int falseNegatives() const {
+        inline int falseNegatives() const {
             return _falseNegatives;
         }
 
-        const int total() const {
+        inline int total() const {
             return truePositives() + trueNegatives() + falsePositives() + falseNegatives();
         }
 

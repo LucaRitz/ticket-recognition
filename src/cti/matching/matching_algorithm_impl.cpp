@@ -129,16 +129,18 @@ vector<cti::TicketMatch> cti::impl::MatchingAlgorithmImpl::execute(const cti::Ti
 
         double score = matched ? inliersRatio * 10000 * matchesRatio : 0; // TODO: improve score
 
-        int totalTime = keypointTime + descriptorTime + knnTime + homographyTime;
-        std::cout << "SCORE: " << score << " "
-                  << "TEMPLATE: " << name << " "
-                  << "MATCHING-TEST: score=" << matchesRatio << " (" << numberOfMatches << "/" << numberOfPotentialMatches << ") "
-                  << "HOMOGRAPHY: determinant=" << determinant << " inliers ratio=" << inliersRatio << " inliers=" << numberOfInliers << " outliers=" << (bestMatches.size() - numberOfInliers) << " "
-                  << "TIME: " << "total=" << totalTime << "ms " << "keypoints=" << keypointTime << "ms " << "descriptors=" << descriptorTime << "ms " << " knn=" << knnTime << "ms " << " homography=" << homographyTime << "ms "
-                  << "Thresholds: ratio-test=" << ratioTestThreshold << " " << " score=" << scoreThreshold << " " << " score-test=" << scoreTestThreshold << " "
-                  << "KEYPOINTS: template=" << templateKeypoints.size() << " input=" << inputKeypoints.size() << " "
-                  << "DESCRIPTORS: template=" << templateDescriptors.size() << " input=" << inputDescriptors.size() << " "
-                  << std::endl;
+        #ifdef CTI_DEBUG
+            int totalTime = keypointTime + descriptorTime + knnTime + homographyTime;
+            std::cout << "SCORE: " << score << " "
+                      << "TEMPLATE: " << name << " "
+                      << "MATCHING-TEST: score=" << matchesRatio << " (" << numberOfMatches << "/" << numberOfPotentialMatches << ") "
+                      << "HOMOGRAPHY: determinant=" << determinant << " inliers ratio=" << inliersRatio << " inliers=" << numberOfInliers << " outliers=" << (bestMatches.size() - numberOfInliers) << " "
+                      << "TIME: " << "total=" << totalTime << "ms " << "keypoints=" << keypointTime << "ms " << "descriptors=" << descriptorTime << "ms " << " knn=" << knnTime << "ms " << " homography=" << homographyTime << "ms "
+                      << "Thresholds: ratio-test=" << ratioTestThreshold << " " << " score=" << scoreThreshold << " " << " score-test=" << scoreTestThreshold << " "
+                      << "KEYPOINTS: template=" << templateKeypoints.size() << " input=" << inputKeypoints.size() << " "
+                      << "DESCRIPTORS: template=" << templateDescriptors.size() << " input=" << inputDescriptors.size() << " "
+                      << std::endl;
+        #endif
 
         if(!matched) {
             // NO MATCH

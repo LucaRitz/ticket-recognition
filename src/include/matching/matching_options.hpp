@@ -5,7 +5,7 @@
 namespace cti {
 
     /**
-     * Available options for extraction. These are used in the static factory methods in MatchingAlgorithms.
+     * Available options for matching. These are used in the static factory methods in MatchingAlgorithms.
      */
     class EXPORT MatchingOptions {
     public:

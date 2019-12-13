@@ -36,14 +36,14 @@ cti::TicketImage* cti::impl::ExtractionAlgorithmImpl::normalize(
 
     vector<KeyPoint> keypoints;
     vector<KeyPoint> inputKeypoints;
-    int keypointTime = cti::Timer::timed([this, templateImage, inputImage, &keypoints, &inputKeypoints] () {
+    int keypointTime = cti::Timer::timed([this, &templateImage, inputImage, &keypoints, &inputKeypoints] () {
         feature2d->detect(templateImage, keypoints);
         feature2d->detect(inputImage, inputKeypoints);
     });
 
     Mat templateDescriptors;
     Mat inputDescriptors;
-    int descriptorTime = cti::Timer::timed([this, templateImage, inputImage, &keypoints, &inputKeypoints, &templateDescriptors, &inputDescriptors] () {
+    int descriptorTime = cti::Timer::timed([this, &templateImage, &inputImage, &keypoints, &inputKeypoints, &inputDescriptors, &templateDescriptors] () {
         feature2d->compute(inputImage, inputKeypoints, inputDescriptors);
         feature2d->compute(templateImage, keypoints, templateDescriptors);
     });
@@ -79,23 +79,23 @@ cti::TicketImage* cti::impl::ExtractionAlgorithmImpl::normalize(
             warpPerspective(inputImage, warped, homography, inputImage.size());
         });
 
-        int totalTime = keypointTime + descriptorTime + knnTime + homographyTime + warpTime;
-        std::cout << "TOTAL TIME: " << totalTime << "ms "
-                  << "KEYPOINTS: template=" << keypoints.size() << " input=" << inputKeypoints.size() << " time=" << keypointTime << "ms "
-                  << "DESCRIPTORS: template=" << templateDescriptors.size() << " input=" << inputDescriptors.size() << " time=" << descriptorTime << "ms "
-                  << "KNN: matches=" << knnMatches.size() << " time=" << knnTime << "ms "
-                  << "RATIO-TEST: good=" << matches.size() << " threshold=" << ratioTestThreshold << " "
-                  << "HOMOGRAPHY: determinant=" << cv::determinant(homography) << " time=" << homographyTime << "ms "
-                  << "WARP: time=" << warpTime << "ms "
-                  << std::endl;
+        #ifdef CTI_DEBUG
+            int totalTime = keypointTime + descriptorTime + knnTime + homographyTime + warpTime;
+            std::cout << "TOTAL TIME: " << totalTime << "ms "
+                      << "KEYPOINTS: template=" << keypoints.size() << " input=" << inputKeypoints.size() << " time=" << keypointTime << "ms "
+                      << "DESCRIPTORS: template=" << templateDescriptors.size() << " input=" << inputDescriptors.size() << " time=" << descriptorTime << "ms "
+                      << "KNN: matches=" << knnMatches.size() << " time=" << knnTime << "ms "
+                      << "RATIO-TEST: good=" << matches.size() << " threshold=" << ratioTestThreshold << " "
+                      << "HOMOGRAPHY: determinant=" << cv::determinant(homography) << " time=" << homographyTime << "ms "
+                      << "WARP: time=" << warpTime << "ms "
+                      << std::endl;
+        #endif
 
         auto* normalizedImage = matToTicketImage(warped);
         return normalizedImage;
-
     } else {
         throw CtiException { "Ticket does not seem to match TicketImage. Unable to find geometric transformation." };
     }
-    return nullptr;
 }
 
 cti::Metadata cti::impl::ExtractionAlgorithmImpl::read(

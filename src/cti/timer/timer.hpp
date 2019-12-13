@@ -1,19 +1,23 @@
 #pragma once
 
-#include <include/dllmacro.h>
 #include <chrono>
 
 namespace cti {
 
-    class EXPORT Timer {
+    class Timer {
     public:
         template<typename Functor>
-        static int timed(const Functor& fn)  {
-            cti::Timer timer;
-            timer.start();
-            fn();
-            timer.stop();
-            return timer.duration();
+        inline static int timed(const Functor& fn) {
+            #ifdef CTI_DEBUG
+                cti::Timer timer;
+                timer.start();
+                fn();
+                timer.stop();
+                return timer.duration();
+            #else
+                fn();
+                return 0;
+            #endif
         }
         void start();
         void stop();

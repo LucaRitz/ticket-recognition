@@ -12,6 +12,12 @@ endif (LINUX_BUILD)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
+option(CTI_DEBUG_TOGGLE "CTI Debugging" ON)
+
+if(CTI_DEBUG_TOGGLE)
+    add_definitions(-DCTI_DEBUG)
+endif()
+
 include(docs/doxygen.cmake)
 
 set(OpenCV_DIR "${ticket_recognition_SOURCE_DIR}/libs/opencv")

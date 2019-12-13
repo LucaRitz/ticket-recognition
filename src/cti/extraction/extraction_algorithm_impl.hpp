@@ -1,6 +1,5 @@
 #pragma once
 
-#include <include/dllmacro.h>
 #include <include/extraction/extraction_algorithm.hpp>
 #include <include/ocr/ocr_algorithm.hpp>
 #include <include/ocr/ocr_algorithms.hpp>
@@ -13,7 +12,7 @@
 
 namespace cti::impl {
 
-    class EXPORT ExtractionAlgorithmImpl : public ExtractionAlgorithm {
+    class ExtractionAlgorithmImpl : public ExtractionAlgorithm {
     public:
         explicit ExtractionAlgorithmImpl(
                 double ratioTestThreshold = 0.7,

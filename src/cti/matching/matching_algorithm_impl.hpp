@@ -1,6 +1,5 @@
 #pragma once
 
-#include <include/dllmacro.h>
 #include <include/matching/matching_algorithm.hpp>
 #include <unordered_map>
 #include <opencv2/opencv.hpp>
@@ -14,7 +13,7 @@ using std::unordered_map;
 
 namespace cti::impl {
 
-    class EXPORT MatchingAlgorithmImpl : public MatchingAlgorithm {
+    class MatchingAlgorithmImpl : public MatchingAlgorithm {
     public:
         explicit MatchingAlgorithmImpl(
                 double ratioTestThreshold = 0.7,
