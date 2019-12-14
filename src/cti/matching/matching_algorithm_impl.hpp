@@ -18,7 +18,7 @@ namespace cti::impl {
         explicit MatchingAlgorithmImpl(
                 double ratioTestThreshold = 0.7,
                 double scoreTestThreshold = 0.5,
-                double scoreThreshold = 1000.0,
+                double scoreThreshold = 25.0,
                 cv::Ptr<cv::Feature2D> feature2d = cv::xfeatures2d::SIFT::create(),
                 cv::Ptr<cv::DescriptorMatcher> matcher = cv::makePtr<cv::FlannBasedMatcher>(cv::FlannBasedMatcher{})
         );

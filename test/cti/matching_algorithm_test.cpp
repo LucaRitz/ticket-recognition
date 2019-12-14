@@ -7,6 +7,7 @@
 #include <include/point.hpp>
 #include <include/text.hpp>
 #include <include/matching/matching_algorithm.hpp>
+#include <include/matching/matching_options.hpp>
 #include <include/matching/matching_algorithms.hpp>
 #include <reader/reader.hpp>
 #include <reader/test_case.hpp>
@@ -22,6 +23,7 @@ using cti::TicketMatch;
 using cti::Ticket;
 using cti::Text;
 using cti::MatchingAlgorithm;
+using cti::MatchingOptions;
 using cti::MatchingAlgorithms;
 using cti::reader::getAllTemplatesOf;
 using cti::reader::getAllTestsOf;
@@ -65,7 +67,9 @@ TEST(orbMatching, performance) {
     double totalScore = 0.0;
     int numberOfBatches = 0;
     for(auto& batch : getBatchesOfTwoThirds(tickets)) {
-        std::shared_ptr<MatchingAlgorithm> matchingAlgorithm = MatchingAlgorithms::orb();
+        std::shared_ptr<MatchingAlgorithm> matchingAlgorithm = MatchingAlgorithms::orb(MatchingOptions {
+                0.7, 0.5, 7
+        });
         Matcher matcher(*matchingAlgorithm);
         totalScore += runMatching(batch, testcases, matcher);
         numberOfBatches++;

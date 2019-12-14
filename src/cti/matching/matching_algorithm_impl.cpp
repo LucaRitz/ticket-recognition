@@ -38,6 +38,10 @@ void cti::impl::MatchingAlgorithmImpl::train(const cti::Ticket& ticketTemplate) 
     this->_descriptors[name] = descriptors;
     this->feature2d->compute(templateImage, *keypoints, *descriptors);
 
+    // TODO: remove previous descriptors from matcher if the same template is trained twice
+    this->matcher->add(*descriptors);
+    this->matcher->train();
+
     this->_trained.push_back(&ticketTemplate);
 }
 
@@ -66,89 +70,79 @@ vector<cti::TicketMatch> cti::impl::MatchingAlgorithmImpl::execute(const cti::Ti
     });
 
     auto matches = vector<cti::TicketMatch>();
-    for(const auto ticketTemplate : this->_trained) { // TODO: improve efficiency of search
 
-        string name = ticketTemplate->name();
-        auto& templateKeypoints = *this->_keypoints.at(name);
-        auto& templateDescriptors = *this->_descriptors.at(name);
+    vector<vector<DMatch>> knnMatches;
+    int knnTime = cti::Timer::timed([this, &inputDescriptors, &knnMatches] () {
+        this->matcher->knnMatch(inputDescriptors, knnMatches, 2);
+    });
 
-        vector<vector<DMatch>> knnMatches;
-        int knnTime = cti::Timer::timed([this, &inputDescriptors, &templateDescriptors, &knnMatches] () {
-            this->matcher->knnMatch(inputDescriptors, templateDescriptors, knnMatches, 2);
-        });
+    vector<DMatch> bestMatches = ratioTest(knnMatches, ratioTestThreshold);
 
-        vector<DMatch> bestMatches = ratioTest(knnMatches, ratioTestThreshold);
+    vector<int> imgMatchCount;
+    imgMatchCount.reserve(this->_trained.size());
+    for(size_t i = 0; i < this->_trained.size(); i++) {
+        imgMatchCount.push_back(0);
+    }
 
-        if(bestMatches.size() < 4) {
-            // Cannot find homography with less than 4 points
-            // TODO: Requiring at least 4 points may not make sense, maybe require more points?
-            // NO MATCH
-            continue;
+    vector<Point2f> templatePoints;
+    vector<Point2f> inputPoints;
+    for (auto &m : bestMatches) {
+        if(m.imgIdx < this->_trained.size()) {
+            imgMatchCount.at(m.imgIdx) = imgMatchCount.at(m.imgIdx) + 1;
         }
+    }
 
-        vector<Point2f> templatePoints;
-        vector<Point2f> inputPoints;
-        for (auto &m : bestMatches) {
-            templatePoints.push_back(templateKeypoints[m.trainIdx].pt);
-            inputPoints.push_back(inputKeypoints[m.queryIdx].pt);
-        }
+    const Ticket* bestMatch = nullptr;
+    int bestCount = 0;
+    const Ticket* secondBestMatch = nullptr;
+    int secondBestCount = 0;
 
-        Mat homography;
-        Mat inlierMask;
-        int homographyTime = cti::Timer::timed([this, &inputPoints, &templatePoints, &homography, &inlierMask] () {
-            homography = findHomography(inputPoints, templatePoints, RANSAC, 3, inlierMask);
-        });
+    std::stringstream test;
+    for(size_t i = 0; i < imgMatchCount.size(); i++) {
 
-        bool matched = true;
-
-        if(homography.empty()) {
-            matched = false;
-        }
-
-        // See: https://stackoverflow.com/questions/10972438/detecting-garbage-homographies-from-findhomography-in-opencv
-        const double HOMOGRAPHY_DETERMINANT_THRESHOLD = 0.001;
-        double determinant = homography.empty() ? 0.0 : cv::determinant(homography);
-        if(determinant < HOMOGRAPHY_DETERMINANT_THRESHOLD && determinant > -HOMOGRAPHY_DETERMINANT_THRESHOLD) {
-//            matched = false;
-        }
-
-        int numberOfInliers = 0;
-        if(!homography.empty()) {
-            for (size_t i = 0; i < bestMatches.size(); i++) {
-                uchar inlier = inlierMask.at<uchar>(i);
-                if(inlier) {
-                    numberOfInliers++;
-                }
-            }
-        }
-        double inliersRatio = (double)numberOfInliers / bestMatches.size();
-
-        unsigned int numberOfMatches = bestMatches.size();
-        unsigned int numberOfPotentialMatches = knnMatches.size();
-        double matchesRatio = (double)numberOfMatches / (double)numberOfPotentialMatches;
-
-        double score = matched ? inliersRatio * 10000 * matchesRatio : 0; // TODO: improve score
-
+        int count = imgMatchCount.at(i);
+        const Ticket* match = this->_trained.at(i);
         #ifdef CTI_DEBUG
-            int totalTime = keypointTime + descriptorTime + knnTime + homographyTime;
-            std::cout << "SCORE: " << score << " "
-                      << "TEMPLATE: " << name << " "
-                      << "MATCHING-TEST: score=" << matchesRatio << " (" << numberOfMatches << "/" << numberOfPotentialMatches << ") "
-                      << "HOMOGRAPHY: determinant=" << determinant << " inliers ratio=" << inliersRatio << " inliers=" << numberOfInliers << " outliers=" << (bestMatches.size() - numberOfInliers) << " "
-                      << "TIME: " << "total=" << totalTime << "ms " << "keypoints=" << keypointTime << "ms " << "descriptors=" << descriptorTime << "ms " << " knn=" << knnTime << "ms " << " homography=" << homographyTime << "ms "
-                      << "Thresholds: ratio-test=" << ratioTestThreshold << " " << " score=" << scoreThreshold << " " << " score-test=" << scoreTestThreshold << " "
-                      << "KEYPOINTS: template=" << templateKeypoints.size() << " input=" << inputKeypoints.size() << " "
-                      << "DESCRIPTORS: template=" << templateDescriptors.size() << " input=" << inputDescriptors.size() << " "
-                      << std::endl;
+            test << match->name() << "=" << count << " ";
         #endif
 
-        if(!matched) {
-            // NO MATCH
-            continue;
+        if(bestMatch == nullptr || count > bestCount) {
+            secondBestMatch = bestMatch;
+            secondBestCount = bestCount;
+            bestMatch = match;
+            bestCount = count;
+        } else if(secondBestMatch == nullptr ||count > bestCount){
+            secondBestMatch = match;
+            secondBestCount = count;
         }
-
-        matches.emplace_back(TicketMatch{*ticketTemplate, score});
     }
+
+    bool matched = false;
+
+    if(bestMatch != nullptr) {
+        if(secondBestMatch != nullptr) {
+            // Best match must be a good match
+            if(bestCount >= scoreThreshold) {
+                // Best match must be considerably better than the second best match
+                if(bestCount * scoreTestThreshold >= secondBestCount) {
+                    matched = true;
+                }
+            }
+        } else {
+            // Best match must be a good match
+            if(bestCount >= scoreThreshold) {
+                matched = true;
+            }
+        }
+    }
+
+    #ifdef CTI_DEBUG
+        std::cout << "SCORE: " << bestCount << " MATCHES: " << (matched ? bestMatch->name() : "NONE") << " TIME=" << knnTime << "ms " << " REST: " << test.str() << std::endl;
+    #endif
+    if(matched) {
+        matches.emplace_back(*bestMatch, (double)bestCount);
+    }
+
     return matches;
 }
 
