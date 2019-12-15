@@ -12,6 +12,7 @@
 #include <reader/test_case.hpp>
 #include <iostream>
 #include <opencv2/opencv.hpp>
+#include <regex>
 #include "../cti/timer/timer.hpp"
 #include "./test_util.hpp"
 
@@ -38,6 +39,7 @@ TEST(siftExtraction, performance) {
 
     std::vector<const Ticket*> tickets = getAllTemplatesOf("resources/templates");
     std::vector<TestCase*> testcases = getAllTestsOf("resources/tickets");
+//    std::vector<TestCase*> testcases = getAllTestsOf("resources/tickets/extraction_isolated");
 
     std::shared_ptr<ExtractionAlgorithm> extractionAlgorithm = ExtractionAlgorithms::sift();
     MetadataReader reader(*extractionAlgorithm);
@@ -69,30 +71,27 @@ double runExtraction(std::vector<const Ticket *>& tickets, std::vector<TestCase*
     double totalScore = 0.0;
     int totalCases = 0;
 
-    int time = cti::Timer::timed([&tickets, &testcases, &reader, &totalScore, &totalCases] () {
+    int time = 0;
 
-        for(auto& testcase : testcases) {
-            for (auto& imagePath : testcase->getImages()) {
-                totalCases++;
-                std::cout << "RUN TESTCASE " << imagePath << std::endl;
+    for(auto& testcase : testcases) {
+        for (auto& imagePath : testcase->getImages()) {
+            totalCases++;
+            std::cout << "RUN TESTCASE " << imagePath << std::endl;
 
-                const Ticket* matchedTicket = cti::reader::findTicket(tickets, testcase->getExpectedTemplateId());
-                if(matchedTicket == nullptr) {
-                    std::cout << "ERROR: Unable to find template" << std::endl;
-                    continue;
-                }
+            const Ticket* matchedTicket = cti::reader::findTicket(tickets, testcase->getExpectedTemplateId());
+            if(matchedTicket == nullptr) {
+                std::cout << "ERROR: Unable to find template" << std::endl;
+                continue;
+            }
 
+            time += cti::Timer::timed([&imagePath, &matchedTicket, &reader, &totalScore, &testcase] () {
                 TicketImage inputImage { imagePath };
                 const cti::Metadata metadata = reader.read(*matchedTicket, inputImage);
                 totalScore += calcExtractionScore(testcase, metadata);
-
-                // TODO: remove debugging code
-//                for (auto &text : metadata->texts()) {
-//                    std::cout << "Extracted text '" << text.first << "' : '" << text.second << "'" << std::endl;
-//                }
-            }
+            });
         }
-    });
+    }
+
     std::cout << "SCORE: " << totalScore / totalCases << " testcases=" << totalCases
               << " time=" << time << "ms"  << " = " << ((double)time / testcases.size()) << "ms/testcase"<< std::endl;
     return totalScore / totalCases;
@@ -107,6 +106,27 @@ void replaceAll(std::string& str, const std::string& from, const std::string& to
         str.replace(start_pos, from.length(), to);
         start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
     }
+}
+
+// Date in Format dd.MM.yyyy which is used for some of our testcases
+const std::regex DATE_REGEX {"([0-9]{1,2})[. \\/-]?([0-9]{1,2})[. \\/-]?([0-9]{2,4})" };
+
+bool isDate(std::string& str) {
+    return std::regex_match(str, DATE_REGEX);
+}
+
+std::string getComparableDateString(std::string& str) {
+    std::smatch matches;
+    if(std::regex_search(str, matches, DATE_REGEX) && matches.size() == 3) {
+        // Looks like a date
+        std::string dateString;
+        for (const auto& match : matches) {
+            dateString += match;
+        }
+        return dateString;
+    }
+    // Not a date
+    return "";
 }
 
 double calcExtractionScore(TestCase* testcase, const cti::Metadata& metadata) {
@@ -132,7 +152,15 @@ double calcExtractionScore(TestCase* testcase, const cti::Metadata& metadata) {
             // therefor, that application will know, whether a hyphen can occur in the specific string
             replaceAll(actualText, "—", "-");
 
-            if(actualText == expectedText.second) {
+            // Check if text looks like a date and compare in a smarter way by reading out the numbers and ignoring
+            // any dot, dash or slash that may be between the date components. Any application using this library should
+            // know which texts are supposed to be dates, and in which format, and read the text accordingly.
+            if(isDate(expectedText.second)
+                && getComparableDateString(expectedText.second) == getComparableDateString(actualText)) {
+
+                correct++;
+
+            } else if(actualText == expectedText.second) {
                 correct++;
             } else {
                 std::cout << "Incorrect text: key=" << expectedText.first

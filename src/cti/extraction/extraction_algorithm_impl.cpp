@@ -87,8 +87,7 @@ cti::TicketImage* cti::impl::ExtractionAlgorithmImpl::normalize(
                       << "KNN: matches=" << knnMatches.size() << " time=" << knnTime << "ms "
                       << "RATIO-TEST: good=" << matches.size() << " threshold=" << ratioTestThreshold << " "
                       << "HOMOGRAPHY: determinant=" << cv::determinant(homography) << " time=" << homographyTime << "ms "
-                      << "WARP: time=" << warpTime << "ms "
-                      << std::endl;
+                      << "WARP: time=" << warpTime << "ms " << std::endl;
         #endif
 
         auto* normalizedImage = matToTicketImage(warped);
