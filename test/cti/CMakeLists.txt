@@ -6,3 +6,5 @@ target_sources(ticket_recognition_test PRIVATE
         ticket_image_test.cpp
         test_util.hpp
         test_util.cpp)
+
+add_subdirectory(matching)

@@ -13,6 +13,11 @@ using std::unordered_map;
 
 namespace cti::impl {
 
+    typedef struct ImageTemplate {
+        const Ticket* const _ticket;
+        const size_t _imagePosition;
+    } image_template_t;
+
     class MatchingAlgorithmImpl : public MatchingAlgorithm {
     public:
         explicit MatchingAlgorithmImpl(
@@ -32,13 +37,17 @@ namespace cti::impl {
         double ratioTestThreshold;
         double scoreTestThreshold;
         double scoreThreshold;
-        vector<const Ticket *> _trained;
+        unordered_map<string, image_template_t> _trained;
         const cv::Ptr<cv::Feature2D> feature2d;
         const cv::Ptr<cv::DescriptorMatcher> matcher;
-        unordered_map<string, vector<cv::KeyPoint> *> _keypoints;
-        unordered_map<string, cv::Mat *> _descriptors;
+
         vector<cv::DMatch> ratioTest(const vector<vector<cv::DMatch>> &knnMatches,double threshold) const;
         bool isBestMatchGood(cti::TicketMatch *bestMatch, cti::TicketMatch *secondBestMatch) const;
         std::pair<cti::TicketMatch *, cti::TicketMatch *> findBestTwoMatches(vector<cti::TicketMatch> &matches) const;
+
+        const cti::Ticket *const
+        findTicketByImagePosition(const unordered_map<string, ImageTemplate> &templates, int imagePosition) const;
+        void clear();
+        void trainAll(const vector<const Ticket*>&);
     };
 }

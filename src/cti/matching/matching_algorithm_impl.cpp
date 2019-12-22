@@ -25,34 +25,48 @@ cti::impl::MatchingAlgorithmImpl::MatchingAlgorithmImpl(
 }
 
 void cti::impl::MatchingAlgorithmImpl::train(const cti::Ticket& ticketTemplate) {
-    const string name = ticketTemplate.name();
-
-    const TicketImage& image = ticketTemplate.image();
-    const Mat templateImage = Mat(image.height(), image.width(), CV_8UC(image.bytesPerPixel()), image.image());
-
-    auto* keypoints = new vector<KeyPoint>();
-    this->_keypoints[name] = keypoints;
-    this->feature2d->detect(templateImage, *keypoints);
-
-    auto descriptors = new Mat;
-    this->_descriptors[name] = descriptors;
-    this->feature2d->compute(templateImage, *keypoints, *descriptors);
-
-    // TODO: remove previous descriptors from matcher if the same template is trained twice
-    this->matcher->add(*descriptors);
-    this->matcher->train();
-
-    this->_trained.push_back(&ticketTemplate);
+    vector<const cti::Ticket*> tickets;
+    tickets.push_back(&ticketTemplate);
+    train(tickets);
 }
 
 void cti::impl::MatchingAlgorithmImpl::train(const vector<const cti::Ticket*>& ticketTemplates) {
-    for(auto &ticket : ticketTemplates) {
-        this->train(*ticket);
+    unordered_map<string, image_template_t> existingTicketsToLearn = this->_trained;
+    for (auto* ticket : ticketTemplates) {
+        auto positionInMap = existingTicketsToLearn.find(ticket->name());
+        if (positionInMap != existingTicketsToLearn.end()) {
+            existingTicketsToLearn.erase(positionInMap);
+        }
     }
+
+    bool relearnSomeTemplates = !this->_trained.empty() && existingTicketsToLearn.size() < this->_trained.size();
+    if (relearnSomeTemplates) {
+        clear();
+
+        std::vector<const cti::Ticket*> tickets;
+        std::for_each(existingTicketsToLearn.begin(), existingTicketsToLearn.end(),
+                      [&tickets](const unordered_map<string, image_template_t>::value_type& type){
+                          tickets.push_back(type.second._ticket);
+                      });
+        trainAll(tickets);
+    }
+
+    trainAll(ticketTemplates);
 }
 
 void cti::impl::MatchingAlgorithmImpl::untrain(const cti::Ticket& ticket) {
-    // TODO: implement
+    unordered_map<string, image_template_t> ticketMap = this->_trained;
+    auto positionInMap = ticketMap.find(ticket.name());
+    if (positionInMap != ticketMap.end()) {
+        ticketMap.erase(positionInMap);
+        std::vector<const cti::Ticket*> tickets;
+        std::for_each(ticketMap.begin(), ticketMap.end(),
+                [&tickets](const unordered_map<string, image_template_t>::value_type& type){
+            tickets.push_back(type.second._ticket);
+        });
+        clear();
+        trainAll(tickets);
+    }
 }
 
 vector<cti::TicketMatch> cti::impl::MatchingAlgorithmImpl::execute(const cti::TicketImage& ticketImage) {
@@ -101,7 +115,7 @@ vector<cti::TicketMatch> cti::impl::MatchingAlgorithmImpl::execute(const cti::Ti
     for(size_t i = 0; i < imgMatchCount.size(); i++) {
 
         int count = imgMatchCount.at(i);
-        const Ticket* match = this->_trained.at(i);
+        const Ticket* match = findTicketByImagePosition(this->_trained, i);
         #ifdef CTI_DEBUG
             test << match->name() << "=" << count << " ";
         #endif
@@ -137,7 +151,8 @@ vector<cti::TicketMatch> cti::impl::MatchingAlgorithmImpl::execute(const cti::Ti
     }
 
     #ifdef CTI_DEBUG
-        std::cout << "SCORE: " << bestCount << " MATCHES: " << (matched ? bestMatch->name() : "NONE") << " TIME=" << knnTime << "ms " << " REST: " << test.str() << std::endl;
+        int totalTime = knnTime + keypointTime + descriptorTime;
+        std::cout << "SCORE: " << bestCount << " MATCHES: " << (matched ? bestMatch->name() : "NONE") << " TIME=" << totalTime << "ms " << " REST: " << test.str() << std::endl;
     #endif
     if(matched) {
         matches.emplace_back(*bestMatch, (double)bestCount);
@@ -212,4 +227,48 @@ vector<cv::DMatch> cti::impl::MatchingAlgorithmImpl::ratioTest(
         }
     }
     return matches;
+}
+
+const cti::Ticket *const
+cti::impl::MatchingAlgorithmImpl::findTicketByImagePosition(
+        const unordered_map<string, cti::impl::image_template_t> &templates, int imagePosition) const {
+    for (auto& ticketImage : templates) {
+        if (ticketImage.second._imagePosition == imagePosition) {
+            return ticketImage.second._ticket;
+        }
+    }
+
+    return nullptr;
+}
+
+void cti::impl::MatchingAlgorithmImpl::clear() {
+    this->feature2d->clear();
+    this->matcher->clear();
+    this->_trained.clear();
+}
+
+void cti::impl::MatchingAlgorithmImpl::trainAll(const vector<const Ticket*>& tickets) {
+    for (auto* ticketTemplate : tickets) {
+        const string name = ticketTemplate->name();
+
+        const TicketImage& image = ticketTemplate->image();
+        const Mat templateImage = Mat(image.height(), image.width(), CV_8UC(image.bytesPerPixel()), image.image());
+
+        vector<KeyPoint> keypoints;
+        this->feature2d->detect(templateImage, keypoints);
+
+        Mat descriptors;
+        this->feature2d->compute(templateImage, keypoints, descriptors);
+
+        this->matcher->add(descriptors);
+
+        image_template_t imageTemplate {
+                ticketTemplate,
+                this->_trained.size()
+        };
+
+        this->_trained.insert(std::pair<string, image_template_t>(name, imageTemplate));
+    }
+
+    this->matcher->train();
 }
