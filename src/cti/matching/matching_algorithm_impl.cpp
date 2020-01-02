@@ -98,8 +98,6 @@ vector<cti::TicketMatch> cti::impl::MatchingAlgorithmImpl::execute(const cti::Ti
         imgMatchCount.push_back(0);
     }
 
-    vector<Point2f> templatePoints;
-    vector<Point2f> inputPoints;
     for (auto &m : bestMatches) {
         if(m.imgIdx < this->_trained.size()) {
             imgMatchCount.at(m.imgIdx) = imgMatchCount.at(m.imgIdx) + 1;
