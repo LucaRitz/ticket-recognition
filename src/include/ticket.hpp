@@ -11,7 +11,6 @@ namespace cti {
 
     class Text;
     class TicketImage;
-    class BoundingBox;
 
     /**
      * Template of a ticket to be processed. It describes how one kind of ticket may look, using a TicketImage,

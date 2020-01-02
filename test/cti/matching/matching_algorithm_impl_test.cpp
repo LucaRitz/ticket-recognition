@@ -73,9 +73,10 @@ TEST_F(MatchingAlgorithmTest, train_someTrainedBeforeAndSameTemplateAppliedAgain
 
     Ticket* ticket3;
     createTicket(ticket3);
-    std::vector<const Ticket*> retrainedTickets;
-    retrainedTickets.push_back(ticket1);
-    retrainedTickets.push_back(ticket3);
+    std::vector<const Ticket*> retrainedTickets = {
+            ticket1,
+            ticket3
+    };
 
     // Assert
     EXPECT_CALL(*this->_feature2d, clear());

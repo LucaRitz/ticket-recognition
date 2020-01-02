@@ -8,6 +8,7 @@
 #include <include/metadata.hpp>
 #include <include/extraction/extraction_algorithm.hpp>
 #include <include/extraction/extraction_algorithms.hpp>
+#include <include/exception/cti_exception.hpp>
 #include <reader/reader.hpp>
 #include <reader/test_case.hpp>
 #include <iostream>
@@ -23,6 +24,7 @@ using cti::Text;
 using cti::Metadata;
 using cti::ExtractionAlgorithm;
 using cti::ExtractionAlgorithms;
+using cti::CtiException;
 using cti::reader::getAllTemplatesOf;
 using cti::reader::getAllTestsOf;
 using cti::reader::TestCase;
@@ -61,8 +63,11 @@ TEST(orbExtraction, performance) {
     std::shared_ptr<ExtractionAlgorithm> extractionAlgorithm = ExtractionAlgorithms::orb();
     MetadataReader reader(*extractionAlgorithm);
 
-    runExtraction(tickets, testcases, reader);
-
+    try {
+        runExtraction(tickets, testcases, reader);
+    } catch(CtiException& exc) {
+        std::cout << "Ended by exception: " << exc.what() << std::endl;
+    }
     std::cout.rdbuf(coutbuf);
 }
 
