@@ -20,7 +20,7 @@ namespace cti {
         BoundingBox(Point topLeft, Point bottomRight) noexcept(false);
 
         BoundingBox(const BoundingBox&) = default;
-        BoundingBox(BoundingBox&&) = delete;
+        BoundingBox(BoundingBox&&) = default;
         BoundingBox& operator=(const BoundingBox&) = delete;
         BoundingBox& operator=(BoundingBox&&) = delete;
 

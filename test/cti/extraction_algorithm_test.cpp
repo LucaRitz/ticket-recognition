@@ -41,7 +41,6 @@ TEST(siftExtraction, performance) {
 
     std::vector<const Ticket*> tickets = getAllTemplatesOf("resources/templates");
     std::vector<TestCase*> testcases = getAllTestsOf("resources/tickets");
-//    std::vector<TestCase*> testcases = getAllTestsOf("resources/tickets/extraction_isolated");
 
     std::shared_ptr<ExtractionAlgorithm> extractionAlgorithm = ExtractionAlgorithms::sift();
     MetadataReader reader(*extractionAlgorithm);
@@ -63,11 +62,7 @@ TEST(orbExtraction, performance) {
     std::shared_ptr<ExtractionAlgorithm> extractionAlgorithm = ExtractionAlgorithms::orb();
     MetadataReader reader(*extractionAlgorithm);
 
-    try {
-        runExtraction(tickets, testcases, reader);
-    } catch(CtiException& exc) {
-        std::cout << "Ended by exception: " << exc.what() << std::endl;
-    }
+    runExtraction(tickets, testcases, reader);
     std::cout.rdbuf(coutbuf);
 }
 
@@ -91,14 +86,18 @@ double runExtraction(std::vector<const Ticket *>& tickets, std::vector<TestCase*
 
             time += cti::Timer::timed([&imagePath, &matchedTicket, &reader, &totalScore, &testcase] () {
                 TicketImage inputImage { imagePath };
-                const cti::Metadata metadata = reader.read(*matchedTicket, inputImage);
-                totalScore += calcExtractionScore(testcase, metadata);
+                try {
+                    const cti::Metadata metadata = reader.read(*matchedTicket, inputImage);
+                    totalScore += calcExtractionScore(testcase, metadata);
+                } catch(CtiException& exc) {
+                    std::cout << "Ended by exception: " << exc.what() << std::endl;
+                }
             });
         }
     }
 
     std::cout << "SCORE: " << totalScore / totalCases << " testcases=" << totalCases
-              << " time=" << time << "ms"  << " = " << ((double)time / testcases.size()) << "ms/testcase"<< std::endl;
+              << " time=" << time << "ms"  << " = " << ((double)time / totalCases) << "ms/testcase"<< std::endl;
     return totalScore / totalCases;
 }
 
@@ -152,9 +151,9 @@ double calcExtractionScore(TestCase* testcase, const cti::Metadata& metadata) {
         } else {
             string actualText = actualTextIt->second;
 
-            // Tesseract has a tendency to recognize '—' instead of '-'. Should we replace this?
-            // Any application using this library will need to sanitize the text retrieved using this library
-            // therefor, that application will know, whether a hyphen can occur in the specific string
+            // Tesseract has a tendency to recognize '—' instead of '-'.
+            // Any application using this library will need to sanitize the text retrieved using this library.
+            // Therefor, that application will know, whether a hyphen can occur in the specific string
             replaceAll(actualText, "—", "-");
 
             // Check if text looks like a date and compare in a smarter way by reading out the numbers and ignoring
