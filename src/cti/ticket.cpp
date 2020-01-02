@@ -2,7 +2,7 @@
 #include <include/ticket_image.hpp>
 #include <include/text.hpp>
 #include <include/bounding_box.hpp>
-#include <include/Point.hpp>
+#include <include/point.hpp>
 #include <include/exception/cti_exception.hpp>
 
 bool isInsideImageBounds(const cti::Point& point, const cti::TicketImage& image) {
