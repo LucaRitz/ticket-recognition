@@ -268,5 +268,7 @@ void cti::impl::MatchingAlgorithmImpl::trainAll(const vector<const Ticket*>& tic
         this->_trained.insert(std::pair<string, image_template_t>(name, imageTemplate));
     }
 
-    this->matcher->train();
+    if (!this->_trained.empty()) {
+        this->matcher->train();
+    }
 }
